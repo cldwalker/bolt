@@ -4,6 +4,7 @@
               [cljs.core.async :refer [put! <! >! chan timeout]]
               [om.core :as om :include-macros true]
               [om.dom :as dom :include-macros true]
+              [clojure.string :as string]
               [bolt.config :as config]))
 
 ;; Lets you do (prn "stuff") to the console
@@ -20,7 +21,8 @@
 
 (defn search-form [app owner {:keys [chan]}]
   (om/component
-   (dom/form #js {:onSubmit #(submit-search chan %) }
+   (dom/form #js {:onSubmit #(submit-search chan %)
+                  :className "jumbotron"}
             (dom/input #js {:type "text" :id "search_term"})
             (dom/input #js {:type "submit" :value "Search"}))))
 
@@ -46,44 +48,67 @@
   (put! chan [:service.id id])
   false)
 
-(defn search-results [app owner {:keys [result chan]}]
+(defn search-results [app owner {:keys [chan]}]
   (om/component
    (dom/div
     #js {:id "search_results"}
-    (if result
+    (if-let [result (:search-result app)]
       (do (.log js/console "DATA" result)
           (render-table ["h1" "h2"] [["c1" "c2"] ["d1" "d2"]]))
       ""))))
 
+(defn process-search
+  "For now this is just a local config lookup but this could interact
+  with another service."
+  [input]
+  (let [[cmd & args] (string/split input #"\s+")]
+    {:name cmd
+     :url (get-in config/config [:commands (keyword cmd)])
+     :args args}))
+
 (defn handle-event [app event event-data {:keys [chan]}]
-  (.log js/console "Event: " (pr-str event) event-data)
+  (.log js/console "Event: " (pr-str event event-data))
   (case event
-    :service.search (put! chan [:ui.search (get-in config/config [:commands (keyword event-data)])])
+    :service.search (put! chan [:ui.search (process-search event-data)])
     :ui.search  (om/update! app assoc :search-result event-data)
     (.log js/console "No event found for" event event-data)))
 
+(defn handle-search-result [app opts]
+  (let [{:keys [url] :as cmd} (:search-result app)]
+    (if url
+      ;; TODO: url encode args
+      ;; TODO: error for non-matching args
+      (let [redirect-url (apply string/replace url "%s" (:args cmd))]
+        (prn js/console redirect-url)
+        (set! (.-location js/window) redirect-url))
+      (do
+        (om/update! app assoc :error (str "No command found for " (:name cmd)))
+        nil))))
+
 (defn bolt-app [app owner]
   (reify
-      om/IWillMount
-      (will-mount [_]
-                  (let [main-chan (chan 10)]
-                    (om/set-state! owner :chan main-chan)
-                    (go (while true
-                          (let [[event event-data](<! main-chan)]
-                            (handle-event
-                             app
-                             event
-                             event-data
-                             {:chan main-chan}))))
-                    (put! main-chan [:ui.search "found"])))
-      om/IRender
-      (render [_]
-              (dom/div nil
-                       (dom/h1 nil "Welcome to Bolt!")
-                       (om/build search-form app {:opts {:chan (om/get-state owner :chan)}})
-                       ;; Consider not rendering these when they have no results
-                       (om/build search-results app {:opts {:result (:search-result app)
-                                                            :chan (om/get-state owner :chan)}})
-                       ))))
+    om/IWillMount
+    (will-mount [_]
+      (let [main-chan (chan 10)]
+        (om/set-state! owner :chan main-chan)
+        (go (while true
+              (let [[event event-data](<! main-chan)]
+                (handle-event
+                  app
+                  event
+                  event-data
+                  {:chan main-chan}))))))
+    om/IRender
+    (render [_]
+      (dom/div nil
+               (dom/h1 nil "Welcome to Bolt!")
+               (when (:error app)
+                 (dom/div
+                   #js {:className "alert alert-danger"}
+                   nil
+                   (:error app)))
+               (om/build search-form app {:opts {:chan (om/get-state owner :chan)}})
+               (when (:search-result app)
+                 (handle-search-result app {:chan (om/get-state owner :chan)}))))))
 
 (om/root app-state bolt-app (.getElementById js/document "app"))
