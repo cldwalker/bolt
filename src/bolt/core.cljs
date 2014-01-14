@@ -30,7 +30,7 @@
             (dom/input #js {:type "text" :id "search_term" :autoFocus "autofocus"})
             (dom/input #js {:type "submit" :value "Search"}))))
 
-(defn process-search
+(defn process-search*
   "For now this is just a local config lookup but this could interact
   with another service."
   [input]
@@ -39,10 +39,14 @@
      :url (get-in config/config [:commands (keyword cmd)])
      :args args}))
 
+(defn process-search
+  [event-data chan]
+  (put! chan [:ui.search (process-search* event-data)]))
+
 (defn handle-event [app event event-data {:keys [chan]}]
   (.log js/console "Event: " (pr-str event event-data))
   (case event
-    :service.search (put! chan [:ui.search (process-search event-data)])
+    :service.search (process-search event-data chan)
     :ui.search  (om/update! app assoc :search-result event-data)
     (.log js/console "No event found for" event event-data)))
 
@@ -99,7 +103,7 @@
 (defroute "/to/:command" [command]
   (om/root app-state bolt-app (.getElementById js/document "app"))
   ;; need cursor for error handling
-  (om/update! cursor assoc :search-result (process-search command)))
+  (om/update! cursor assoc :search-result (process-search* command)))
 
 (def history (History.))
 
