@@ -46,12 +46,18 @@
     :ui.search  (om/update! app assoc :search-result event-data)
     (.log js/console "No event found for" event event-data)))
 
+(defn build-url [url args]
+  (let [expected-args (count (re-seq #"%s" url))]
+    (cond
+      (= 1 expected-args) (string/replace-first url "%s" (string/join " " args))
+      ;; TODO: error for non-matching args
+      :else (apply string/replace url "%s" args))))
+
 (defn handle-search-result [app]
   (let [{:keys [url] :as cmd} (:search-result app)]
     (if url
       ;; TODO: url encode args
-      ;; TODO: error for non-matching args
-      (let [redirect-url (apply string/replace url "%s" (:args cmd))]
+      (let [redirect-url (build-url url (:args cmd))]
         (prn js/console redirect-url)
         (set! (.-location js/window) redirect-url))
       (do
