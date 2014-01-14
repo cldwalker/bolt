@@ -1,11 +1,15 @@
 (ns bolt.core
-    (:require-macros [cljs.core.async.macros :refer [go alt!]])
-    (:require [goog.events :as events]
+  (:require-macros [cljs.core.async.macros :refer [go alt!]]
+                   [secretary.macros :refer [defroute]])
+  (:require [goog.events :as events]
               [cljs.core.async :refer [put! <! >! chan timeout]]
               [om.core :as om :include-macros true]
               [om.dom :as dom :include-macros true]
+              [secretary.core :as secretary]
               [clojure.string :as string]
-              [bolt.config :as config]))
+              [bolt.config :as config])
+  (:import [goog History]
+           [goog.history EventType]))
 
 ;; Lets you do (prn "stuff") to the console
 (enable-console-print!)
@@ -42,7 +46,7 @@
     :ui.search  (om/update! app assoc :search-result event-data)
     (.log js/console "No event found for" event event-data)))
 
-(defn handle-search-result [app opts]
+(defn handle-search-result [app]
   (let [{:keys [url] :as cmd} (:search-result app)]
     (if url
       ;; TODO: url encode args
@@ -58,6 +62,7 @@
   (reify
     om/IWillMount
     (will-mount [_]
+      (def cursor app) ;; need global access to this for other routes
       (let [main-chan (chan 10)]
         (om/set-state! owner :chan main-chan)
         (go (while true
@@ -78,6 +83,22 @@
                    (:error app)))
                (om/build search-form app {:opts {:chan (om/get-state owner :chan)}})
                (when (:search-result app)
-                 (handle-search-result app {:chan (om/get-state owner :chan)}))))))
+                 (handle-search-result app))))))
 
-(om/root app-state bolt-app (.getElementById js/document "app"))
+;; Routing
+
+(defroute "/" []
+  (om/root app-state bolt-app (.getElementById js/document "app")))
+
+(defroute "/to/:command" [command]
+  (om/root app-state bolt-app (.getElementById js/document "app"))
+  ;; need cursor for error handling
+  (om/update! cursor assoc :search-result (process-search command)))
+
+(def history (History.))
+
+(events/listen history EventType/NAVIGATE
+  (fn [e] (secretary/dispatch! (.-token e))))
+
+(.setEnabled history true)
+
