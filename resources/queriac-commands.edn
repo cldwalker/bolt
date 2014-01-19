@@ -1,0 +1,539 @@
+({:alias "ly",
+  :url "http://www.lyricsdepot.com/search?q=%s",
+  :name "lyricsdepot"}
+ {:alias "a",
+  :url
+  "http://www.amazon.com/exec/obidos/external-search/002-0624655-2773629?tag=opera-20&index=blended&keyword=%s",
+  :name "amazon"}
+ {:alias "e",
+  :url
+  "http://search.ebay.com/search/search.dll?ht=1&SortProperty=MetaEndSort&query=%s&ebaytag1=ebayreg",
+  :name "ebay"}
+ {:alias "ap",
+  :url "http://freshmeat.net/search/?q=%s",
+  :name "freshmeat"}
+ {:alias "sai",
+  :url "http://alltheweb.com/search?avkw=fogg&cat=img&cs=utf-8&q=%s",
+  :name "AlltheWeb.com image"}
+ {:alias "site",
+  :url "http://uptime.netcraft.com/up/graph?site=%s",
+  :name "computers that a site runs"}
+ {:alias "uf",
+  :url "http://search.ufl.edu/web?query=%s",
+  :name "uf search"}
+ {:alias "vim",
+  :url
+  "http://www.vim.org/scripts/script_search_results.php?keywords=%s",
+  :name "vim"}
+ {:alias "sp",
+  :url "http://www.spanishdict.com/AS.cfm?e=%s",
+  :name "spanish"}
+ {:alias "irc",
+  :url "http://irc.netsplit.de/channels/?num=0&query=%s",
+  :name "irc"}
+ {:alias "mapq",
+  :url
+  "http://www.mapquest.com/maps/map.adp?country=US&address=&city=%s",
+  :name "MapQuest: Maps"}
+ {:alias "yhm",
+  :url "http://movies.yahoo.com/showtimes/showtimes.html?z=%s",
+  :name "Yahoo! movie showtimes"}
+ {:alias "we",
+  :url
+  "http://www.weather.com/weather/local/%s?lwsa=WeatherLocalUndeclared",
+  :name "weather.com"}
+ {:alias "sl",
+  :url "http://slashdot.org/search.pl?query=%s",
+  :name "Slashdot"}
+ {:alias "art",
+  :url "http://citeseer.ist.psu.edu/cis?q=%s&cs=1",
+  :name "scientific articles"}
+ {:alias "gv",
+  :url
+  "http://local.google.com/local?sc=1&hl=en&q=%s&near=gainesville+fl",
+  :name "local google search"}
+ {:alias "arch",
+  :url "http://web.archive.org/web/*/%s",
+  :name "Internet Archive"}
+ {:alias "pvb",
+  :url
+  "http://www.verbix.com/webverbix/go.asp?T1=%s&imageField.x=0&imageField.y=0&D1=[:lang]&H1=101",
+  :name "Verbix- Conjugate Verbs In Many Languages"}
+ {:alias "tpe",
+  :url
+  "http://dictionaries.travlang.com/PortugueseEnglish/dict.cgi?query=%s&max=50",
+  :name "Travlang- Portuguese to English Dictionary"}
+ {:alias "tep",
+  :url
+  "http://dictionaries.travlang.com/EnglishPortuguese/dict.cgi?query=%s&max=50",
+  :name "Travlang - English to Portuguese"}
+ {:alias "rdc",
+  :url "http://www.ruby-doc.org/core/classes/%s.html",
+  :name "ruby-doc core pages"}
+ {:alias "techi",
+  :url "http://www.technorati.com/tag/%s",
+  :name "technorati tags"}
+ {:alias "raa",
+  :url
+  "http://raa.ruby-lang.org/search.rhtml?search=%s&search_target=all&search_mode=and",
+  :name "raa.ruby"}
+ {:alias "rub",
+  :url
+  "http://www.ruby-talk.org/cgi-bin/vframe.rb?key=%s&cginame=namazu.rb&submit=Search&dbname=ruby-talk&max=50&whence=0",
+  :name "rubytalk.org"}
+ {:alias "rbg",
+  :url "http://rubygarden.org/ruby?dosearch=1&search=%s",
+  :name "rubygarden"}
+ {:alias "pira",
+  :url
+  "http://physicslearning.colorado.edu/PIRA/PiraSubTOC.asp?STopic=%s",
+  :name "colorado pira"}
+ {:alias "pira2",
+  :url "http://www.cgibin.ncsu.edu/pd-bin/searchbib.cgi?what=%s",
+  :name "phys demo search at ncsu"}
+ {:alias "bsnip",
+  :url "http://www.bigbold.com/snippets/tags/%s",
+  :name "snippets"}
+ {:alias "const",
+  :url "http://physics.nist.gov/cgi-bin/cuu/Results?search_for=%s",
+  :name "CODATA Values of the Fundamental Constants"}
+ {:alias "ggs",
+  :url "http://groups.google.com/groups/dir?q=%s",
+  :name "Google Groups- Search for a Group"}
+ {:alias "cdel",
+  :url "http://cloudalicio.us/tagcloud.php?url=%s",
+  :name "cloudalicious"}
+ {:alias "bl",
+  :url "http://bloglines.com/search?r=0&q=%s&submit=Search",
+  :name "Bloglines"}
+ {:alias "physics_teacher",
+  :url
+  "http://scitation.aip.org/vsearch/servlet/VerityServlet?KEY=PHTEAH&smode=strresults&CURRENT=&ONLINE=YES&SMODE=&ver=&possible1=%s&possible1zone=article&bool1=and&possible2=&possible2zone=multi&bool4=and&possible4=&possible4zone=author&sort=chron&maxdisp=25&threshold=0&%5Bsearch%5D.x=0&%5Bsearch%5D.y=0&frommonth=&fromday=&fromyear=&tomonth=&today=&toyear=&fromvolume=&fromissue=&tovolume=&toissue=&page=1&origquery=&vdk_query=&chapter=0&docdisp=0",
+  :name "The Physics Teacher"}
+ {:alias "psql",
+  :url
+  "http://search.postgresql.org/www.search?q=%s&cs=utf-8&ul=http%3A//www.postgresql.org/docs/7.2/interactive/%25&fm=on&gr=on&o=0&ps=20&s=rate",
+  :name "postgres manual"}
+ {:alias "rorw",
+  :url
+  "http://www.google.com/search?q=%s&domains=wiki.rubyonrails.org&sitesearch=wiki.rubyonrails.org",
+  :name "rails wiki"}
+ {:alias "rorl",
+  :url
+  "http://search.gmane.org/?query=%s&group=gmane.comp.lang.ruby.rails",
+  :name "Gmane ROR search"}
+ {:alias "sim",
+  :url "http://similicio.us/search.php?url=%s&submit=find+similar",
+  :name "similicio.us - find similar sites"}
+ {:alias "v",
+  :url "http://youtube.com/results?search_query=%s",
+  :name "youtube search"}
+ {:alias "kode",
+  :url "http://koders.com/default.aspx?s=%s&_%24la=Ruby&_%24li=*",
+  :name "Koder ruby search"}
+ {:alias "ep",
+  :url
+  "http://www.epinions.com/search/?search_string=%s&submitted_form=searchbar&search_vertical=all&tax_name=",
+  :name "epinions"}
+ {:alias "wls", :url "http://webls.marcoslot.net/#%s", :name "WebLS"}
+ {:alias "foxe",
+  :url "https://addons.mozilla.org/en-US/firefox/search?q=%s",
+  :name "Firefox Addons/Extensions Search"}
+ {:alias "fms",
+  :url "http://www.last.fm/music/?m=tracks&q=%s",
+  :name "last.fm song search"}
+ {:alias "fma",
+  :url "http://www.last.fm/music/?m=artists&q=%s",
+  :name "last.fm, artist search"}
+ {:alias "gdef",
+  :url "http://www.google.com/search?q=define:%s",
+  :name "Google Definitions"}
+ {:alias "od",
+  :url "http://search.dmoz.org/cgi-bin/search?search=%s",
+  :name "Open Directory"}
+ {:alias "nzb",
+  :url "http://www.newzbot.com/search.php?t=group&gtag=usenet&q=%s",
+  :name "Newzbot"}
+ {:alias "froogle",
+  :url "http://google.com/froogle?q=%s",
+  :name "Froogle"}
+ {:alias "lju",
+  :url "http://www.livejournal.com/userinfo.bml?user=%s",
+  :name "LiveJournal  User"}
+ {:alias "e2",
+  :url "http://everything2.com/index.pl?node=%s",
+  :name "Everything2"}
+ {:alias "w2",
+  :url "http://www.wikipedia.com/w/wiki.phtml?search=%s",
+  :name "Wikipedia"}
+ {:alias "review",
+  :url "http://www.mrqe.com/lookup?isindex=%s",
+  :name "Movie Review Query Engine"}
+ {:alias "cddb",
+  :url "http://www.cddb.com/xm/search?q=%s&f=artist&f=disc",
+  :name "Gracenote CDDB"}
+ {:alias "mwdict",
+  :url "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=%s",
+  :name "Merriam-Webster"}
+ {:alias "ys",
+  :url "http://finance.yahoo.com/q?s=%s",
+  :name "Stock quote from Yahoo!"}
+ {:alias "bbc",
+  :url "http://newssearch.bbc.co.uk/cgi-bin/search/results.pl?q=%s",
+  :name "BBC news search topic"}
+ {:alias "yn",
+  :url "http://news.search.yahoo.com/search/news/?p=%s",
+  :name "Yahoo! News"}
+ {:alias "whois2",
+  :url "http://www.samspade.org/whois/%s",
+  :name "Samspade info"}
+ {:alias "python",
+  :url "http://www.python.org/doc/current/lib/module-%s.html",
+  :name "Python"}
+ {:alias "mysql",
+  :url "http://www.mysql.com/search/?q=%s&doc=1&m=o",
+  :name "MySQL"}
+ {:alias "sf",
+  :url "http://sourceforge.net/search/?words=%s",
+  :name "Sourceforge"}
+ {:alias "ups",
+  :url
+  "http://wwwapps.ups.com/etracking/tracking.cgi?tracknums_displayed=1&TypeOfInquiryNumber=T&HTMLVersion=4.0&InquiryNumber1=%s",
+  :name "UPS"}
+ {:alias "fedex",
+  :url
+  "http://www.fedex.com/cgi-bin/tracking?tracknumbers=%s&action=track",
+  :name "FedEx- search tracking number"}
+ {:alias "doh",
+  :url
+  "http://www.snpp.com/cgi-bin/AT-Simpsons_Archivesearch.cgi?search=%s",
+  :name "Simpsons quote search"}
+ {:alias "acronym",
+  :url
+  "http://www.acronymfinder.com/af-query.asp?String=exact&Acronym=%s",
+  :name "Acronym Finder"}
+ {:alias "med",
+  :url
+  "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?CMD=search&DB=pubmed&term=%s",
+  :name "Entrez PubMed articles"}
+ {:alias "rx",
+  :url "http://bnf.org/bnf/bnf/current/search/text.htm?q=%s&n=50",
+  :name "BNF drug details"}
+ {:alias "s8",
+  :url
+  "http://www.syndic8.com/feedlist.php?ShowMatch=%s&ShowStatus=all",
+  :name "Syndic8"}
+ {:alias "mqr",
+  :url "http://code.google.com/p/monoquery/source/detail?r=%s",
+  :name "monoquery revision"}
+ {:alias "mqt",
+  :url "http://code.google.com/p/monoquery/issues/detail?id=%s",
+  :name "monoquery issue ticket"}
+ {:alias "mqs",
+  :url
+  "http://code.google.com/p/monoquery/issues/list?can=2&q=%s&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary&cells=tiles",
+  :name "monoquery search"}
+ {:alias "phone",
+  :url "http://www.whitepages.com/search/SingleField?q=%s",
+  :name "whitepages"}
+ {:alias "gstrip",
+  :url
+  "http://www.google.com/gwt/n?q=%s&site=search&hl=en&lr=&mrestrict=xhtml&ct=res&cd=1&rd=1&u=(q)&_gwt_noimg=1",
+  :name "Gstrip"}
+ {:alias "yman",
+  :url "http://yubnub.org/kernel/man?args=%s",
+  :name "YubNub Man Pages"}
+ {:alias "yls",
+  :url "http://yubnub.org/kernel/ls?args=%s",
+  :name "yubnub general search"}
+ {:alias "ascii",
+  :url
+  "http://www.network-science.de/ascii/ascii.php?TEXT=%s&x=8&y=7&FONT=_all+fonts+with+your+text_&RICH=no&FORM=left&STRE=no",
+  :name "ascii art"}
+ {:alias "chs",
+  :url
+  "http://www.google.com/search?num=100&q=site:cheat.errtheblog.com%20%s",
+  :name "Search Cheat via google"}
+ {:alias "rfs",
+  :url "http://rubyforge.org/search/?type_of_search=soft&words=%s",
+  :name "rubyforge search"}
+ {:alias "rdstd",
+  :url "http://www.ruby-doc.org/stdlib/libdoc/%s/rdoc/index.html",
+  :name "ruby-doc stdlib page"}
+ {:alias "ri",
+  :url "http://noobkit.com/search?q=%s",
+  :name "noobkit doc search"}
+ {:alias "rord",
+  :url
+  "http://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets?q=%s",
+  :name "rails dev ticket search"}
+ {:alias "tiny",
+  :url "http://tinyurl.com/create.php?url=%s",
+  :name "tiny url"}
+ {:alias "pgrab",
+  :url
+  "http://www.pricegrabber.com/search.php?form_keyword=%s&topcat_id=&st=query",
+  :name "pricegrabber"}
+ {:alias "diggs",
+  :url "http://digg.com/search?section=all&s=%s",
+  :name "digg search"}
+ {:alias "cable",
+  :url "http://www.callcct.com/Shop?search=%s",
+  :name "callct cable search"}
+ {:alias "pops",
+  :url "http://popurls.com/do/search/?popsearch=%s",
+  :name "popurls search"}
+ {:alias "yub",
+  :url "http://www.yubnub.org/parser/parse?command=%s",
+  :name "YubNub - Execute Command"}
+ {:alias "fodch",
+  :url "http://172.16.160.117:8000/trac/login/changeset/%s",
+  :name "fod changeset"}
+ {:alias "fodt",
+  :url "http://172.16.160.117:8000/trac/ticket/%s",
+  :name "fod ticket"}
+ {:alias "qd",
+  :url "http://queri.ac/user_commands/%s/destroy",
+  :name "delete command"}
+ {:alias "ycp",
+  :url "http://queri.ac/commands/copy_yubnub_command?keyword=%s",
+  :name "copy yubnub command"}
+ {:alias "fods",
+  :url
+  "http://172.16.160.117:8000/trac/login/search?q=%s&wiki=on&changeset=on&ticket=on",
+  :name "search fod trac"}
+ {:alias "fbook",
+  :url "http://www.facebook.com/s.php?q=%s",
+  :name "facebook search"}
+ {:alias "qc",
+  :url "http://queri.ac/commands/%s",
+  :name "queriac command page"}
+ {:alias "git",
+  :url
+  "http://github.com/search?[:language]&[:type]&q=[:description] [:followers] [:created] %s",
+  :name "github search"}
+ {:alias "ping",
+  :url "http://network-tools.com/default.asp?prog=ping&host=%s",
+  :name "network-tools ping"}
+ {:alias "blist",
+  :url "http://emailstuff.org/bl/%s",
+  :name "blacklist check"}
+ {:alias "fod", :url "http://funnyordie.com/%s", :name "Funny Or Die"}
+ {:alias "fodl",
+  :url "http://www.funnyordie.com.localhost:3000/%s",
+  :name "fod local"}
+ {:alias "greases",
+  :url "http://userscripts.org/scripts/search?q=%s",
+  :name "Search greasemonkey scripts + tags"}
+ {:alias "geoip",
+  :url "http://geo.localsearchmaps.com/?by_ip=1&cb=IpLookup&ip=%s",
+  :name "Geolocate by IP"}
+ {:alias "del",
+  :url "http://del.icio.us/%s",
+  :name "execute relative url within del.icio.us"}
+ {:alias "fmv",
+  :url "http://www.fandango.com/%s_movietheatershowtimes",
+  :name "fandango movie times"}
+ {:alias "dels",
+  :url "http://del.icio.us/search/?fr=del_icio_us&p=%s&[:type]",
+  :name "Del.icio.us Bookmark Search"}
+ {:alias "sg",
+  :url
+  "http://www.google.com/[:type]?[:hl]&[:lr]&[:date]&[:num]&[:start]&[:lucky]&[:key]&q=%s [:site] [:filetype]",
+  :name "super google"}
+ {:alias "gmas",
+  :url
+  "http://mail.google.com/[:account]/#advanced-search/[:from]&[:to]&[:subject]&[:subset]&[:exclude]&[:within]&[:date]&has=%s",
+  :name "Gmail Advanced Search"}
+ {:alias "w3h",
+  :url
+  "http://validator.w3.org/check?uri=%s&charset=(detect+automatically)&doctype=Inline&[:group]&ss=1",
+  :name "W3C HTML/XML Markup Validator"}
+ {:alias "w3c",
+  :url
+  "http://jigsaw.w3.org/css-validator/validator?uri=%s&profile=css21&usermedium=all&warning=1&lang=en",
+  :name "W3C CSS Validator (CSS level 2.1)"}
+ {:alias "w3f",
+  :url "http://validator.w3.org/feed/check.cgi?url=%s",
+  :name "W3C Feed Validator"}
+ {:alias "gbs",
+  :url
+  "http://www.gutenberg.org/catalog/world/results?&[:author]&[:fulltext]&title=%s",
+  :name "Project Gutenberg (Book) Search"}
+ {:alias "ol",
+  :url "http://www.onelook.com/?w=%s&[:words]&[:phrases]",
+  :name "OneLook Dictionary"}
+ {:alias "rri",
+  :url "http://apidock.com/rails/search?query=%s",
+  :name "API Dock Rails Search"}
+ {:alias "proxy",
+  :url "http://us.worldproxy202.com/index.php?q=%s",
+  :name "US WorldProxy"}
+ {:alias "gtt",
+  :url "http://google.com/translate_t?[:from]&[:to]&text=%s",
+  :name "Google Translate Text"}
+ {:alias "gtu",
+  :url "http://google.com/translate?[:from]&[:to]&u=%s",
+  :name "Google Translate Url"}
+ {:alias "ytu",
+  :url
+  "http://babelfish.yahoo.com/translate_url?[:lang_pair]&trurl=%s",
+  :name "Yahoo Translate Url"}
+ {:alias "ytt",
+  :url
+  "http://babelfish.yahoo.com/translate_txt?[:lang_pair]&trtext=%s",
+  :name "Yahoo Translate Text"}
+ {:alias "gid",
+  :url "http://google.com/translate_dict?q=%s&hl=en&[:langpair]",
+  :name "Google International Dictionary"}
+ {:alias "yl",
+  :url "http://local.yahoo.com/results?p=%s&csz=[:location]",
+  :name "Local Yahoo Search"}
+ {:alias "inlink",
+  :url
+  "http://siteexplorer.search.yahoo.com/advsearch?p=%s&bwm=i&bwmf=u&bwms=p",
+  :name "Links to Url- Yahoo"}
+ {:alias "jux",
+  :url "http://jux2.com/best.php?q=%s",
+  :name "Jux2 search"}
+ {:alias "glink",
+  :url "http://www.codinghorror.com/linktron5k/Default.aspx?url=%s",
+  :name "LinkTron5000"}
+ {:alias "sound",
+  :url "http://www.findsounds.com/ISAPI/search.dll?keywords=%s",
+  :name "Find Sounds"}
+ {:alias "p2rss",
+  :url "http://page2rss.com/page?url=%s",
+  :name "Page2Rss"}
+ {:alias "kw",
+  :url "http://www.kwargs.com/do_query?str=%s",
+  :name "Kwargs - Execute Command"}
+ {:alias "kws",
+  :url "http://www.kwargs.com/search?term=%s",
+  :name "Kwargs Command Search"}
+ {:alias "cl",
+  :url "http://www.colourlovers.com/color/%s",
+  :name "Color Lovers"}
+ {:alias "unicode",
+  :url "http://www.fileformat.info/info/unicode/char/search.htm?q=%s",
+  :name "Unicode Character Search"}
+ {:alias "ppl",
+  :url
+  "http://search.nndb.com/search/nndb.cgi?nndb=1&omenu=unspecified&query=%s",
+  :name "NNDB people search"}
+ {:alias "mus",
+  :url "http://search.playlist.com/tracks/%s",
+  :name "Project Playlist Search"}
+ {:alias "vth",
+  :url "http://kylescholz.com/projects/wordnet/?text=%s",
+  :name "Visual Wordnet Dictionary"}
+ {:alias "vimpl",
+  :url
+  "http://www.google.com/search?q=%s+inurl:mozdev.org/pipermail/vimperator",
+  :name "Vimperator Mailing List Search"}
+ {:alias "txt",
+  :url
+  "http://www.onlinetextmessage.com/send.php?code=FE3F4A&s=SendMessage&remember=y&[:carrier]&[:number]&[:from]&[:subject]&message=%s",
+  :name "Send Text Message"}
+ {:alias "gcs",
+  :url
+  "http://www.google.com/codesearch?[:as_license]&[:as_lang]&[:as_case]&[:as_package]&[:as_filename]&as_q=%s",
+  :name "Google Advanced Code Search"}
+ {:alias "kcs",
+  :url "http://koders.com/default.aspx?li=*&[:la]&s=%s",
+  :name "Koders Code Search"}
+ {:alias "krcs",
+  :url
+  "http://www.krugle.org/kse/files?[:license]&[:findin]&[:lang]&[:project]&query=%s",
+  :name "Krugle Code Search"}
+ {:alias "gg",
+  :url
+  "http://groups.google.com/groups?[:as_ugroup]&[:safe]&[:scoring]&[:as_drrb]&[:as_uauthors]&[:as_usubject]&[:lr]&[:num]&[:as_qdr]&as_q=%s",
+  :name "Google Groups Search"}
+ {:alias "gmapnew",
+  :url "http://www.google.com/maps/api_signup?url=%s",
+  :name "Google Maps Signup"}
+ {:alias "ctar",
+  :url "http://queri.ac/commands/tag_add_remove?v=%s",
+  :name "Add and/or remove tags to Queriac command(s)"}
+ {:alias "ct",
+  :url "http://queri.ac/commands/tag_set?v=%s",
+  :name "Set tags for Queriac Command(s)"}
+ {:alias "qedit",
+  :url "http://queri.ac/commands/%s/edit",
+  :name "Edit Queriac Command (Admin)"}
+ {:alias "iyd",
+  :url
+  "https://secure.onlineaccess.net/cart/index.php?IYD=1?Submit=Click&domain=%s&[:root]",
+  :name "Search Available Domains through Its Your Domain"}
+ {:alias "wnet",
+  :url "http://wordnet.princeton.edu/perl/webwn?s=%s&[:i]",
+  :name "WordNet Search"}
+ {:alias "ghcs",
+  :url
+  "http://github.com/codesearch?[:repo]&[:language]&langOverride=&q=%s",
+  :name "Github Code Search"}
+ {:alias "NULL",
+  :url "http://www.freebase.com/search?[:limit]&[:start]&query=%s",
+  :name "Freebase Search"}
+ {:alias "gfun",
+  :url "http://letmegooglethatforyou.com?q=%s",
+  :name "Google- For Your Special Friends"}
+ {:alias "yps",
+  :url
+  "http://pipes.yahoo.com/pipes/search?r=[:tag][:format][:source][:module]&q=%s",
+  :name "Yahoo Pipe Search"}
+ {:alias "watch",
+  :url "http://www.pagereboot.com/?url=%s&[:refresh]",
+  :name "Monitor (Auto Reload) a Page"}
+ {:alias "domain",
+  :url
+  "http://www.iwhois.com/index.php?domain=%s&[:tld]&lookup=Lookup&clean=1",
+  :name "Domain Availability"}
+ {:alias "uses",
+  :url "http://www.sitonomy.com/?url=%s",
+  :name "Sitonomy - Analyze Site Services"}
+ {:alias "dap",
+  :url "http://www.dapper.net/dapp-factory.jsp?url=%s",
+  :name "Dapper.net- Create page"}
+ {:alias "daps",
+  :url
+  "http://www.dapper.net/dapp-search.php?[:transformer]&keyword=%s",
+  :name "Dapper Search"}
+ {:alias "rfp",
+  :url "http://rubyforge.org/projects/%s",
+  :name "Rubyforge Project Page"}
+ {:alias "bts",
+  :url "http://backtweets.com/search?q=%s",
+  :name "Backtweets Search"}
+ {:alias "jqp",
+  :url "http://plugins.jquery.com/search/node/%s",
+  :name "jQuery Plugins Search"}
+ {:alias "jqs",
+  :url "http://docs.jquery.com/Special:Search?search=%s",
+  :name "jQuery Doc Search"}
+ {:alias "fbs",
+  :url "http://www.freebase.com/type/schema/%s",
+  :name "Freebase Schema"}
+ {:alias "fbv",
+  :url "http://www.freebase.com/view/%s",
+  :name "Freebase View"}
+ {:alias "stack",
+  :url "http://stackoverflow.com/questions/tagged/%s",
+  :name "Stackoverflow"}
+ {:alias "wram",
+  :url "http://www.wolframalpha.com/input/?i=%s",
+  :name "Wolfram Computational Engine"}
+ {:alias "g2",
+  :url "http://www.google.com/squared/search?q=%s",
+  :name "Google Squared"}
+ {:alias "rdfrip",
+  :url
+  "http://www.w3.org/2007/08/pyRdfa/extract?[:warnings]&[:format]&[:parser]&uri=%s",
+  :name "RDFa ripper"}
+ {:alias "gem",
+  :url "http://allgems.ruby-forum.com/gems?search=%s",
+  :name "RubyForum Gems Search"}
+ {:alias "r19",
+  :url "http://isitruby19.com/%s",
+  :name "Is It Ruby 1.9 Gem"})
