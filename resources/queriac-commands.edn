@@ -1,87 +1,10 @@
-({:alias "ly",
-  :url "http://www.lyricsdepot.com/search?q=%s",
-  :name "lyricsdepot"}
- {:alias "a",
-  :url
-  "http://www.amazon.com/exec/obidos/external-search/002-0624655-2773629?tag=opera-20&index=blended&keyword=%s",
-  :name "amazon"}
- {:alias "domain",
-  :url
-  "http://www.iwhois.com/index.php?domain=%s&[:tld]&lookup=Lookup&clean=1",
-  :name "Domain Availability"}
- {:alias "e",
-  :url
-  "http://search.ebay.com/search/search.dll?ht=1&SortProperty=MetaEndSort&query=%s&ebaytag1=ebayreg",
-  :name "ebay"}
- {:alias "site",
-  :url "http://uptime.netcraft.com/up/graph?site=%s",
-  :name "computers that a site runs"}
- {:alias "vim",
-  :url
-  "http://www.vim.org/scripts/script_search_results.php?keywords=%s",
-  :name "vim"}
- {:alias "mapq",
-  :url
-  "http://www.mapquest.com/maps/map.adp?country=US&address=&city=%s",
-  :name "MapQuest: Maps"}
- ;; use google movies
- {:alias "yhm",
-  :url "http://movies.yahoo.com/showtimes/showtimes.html?z=%s",
-  :name "Yahoo! movie showtimes"}
- {:alias "we",
-  :url
-  "http://www.weather.com/weather/local/%s?lwsa=WeatherLocalUndeclared",
-  :name "weather.com"}
- {:alias "arch",
-  :url "http://web.archive.org/web/*/%s",
-  :name "Internet Archive"}
- {:alias "ggs",
-  :url "http://groups.google.com/groups/dir?q=%s",
-  :name "Google Groups- Search for a Group"}
- ;; use clojure
+(
+ ;; Bookmark or delete
+ ;; ------------------
  {:alias "rorl",
   :url
   "http://search.gmane.org/?query=%s&group=gmane.comp.lang.ruby.rails",
   :name "Gmane ROR search"}
- ;; use yelp
- {:alias "ep",
-  :url
-  "http://www.epinions.com/search/?search_string=%s&submitted_form=searchbar&search_vertical=all&tax_name=",
-  :name "epinions"}
- {:alias "v",
-  :url "http://youtube.com/results?search_query=%s",
-  :name "youtube search"}
- {:alias "gdef",
-  :url "http://www.google.com/search?q=define:%s",
-  :name "Google Definitions"}
- {:alias "w2",
-  :url "http://www.wikipedia.com/w/wiki.phtml?search=%s",
-  :name "Wikipedia"}
- {:alias "whois2",
-  :url "http://www.samspade.org/whois/%s",
-  :name "Samspade info"}
-;; try
- {:alias "gstrip",
-  :url
-  "http://www.google.com/gwt/n?q=%s&site=search&hl=en&lr=&mrestrict=xhtml&ct=res&cd=1&rd=1&u=(q)&_gwt_noimg=1",
-  :name "Gstrip"}
- {:alias "git",
-  :url
-  "http://github.com/search?[:language]&[:type]&q=[:description] [:followers] [:created] %s",
-  :name "github search"}
- {:alias "gmas",
-  :url
-  "http://mail.google.com/[:account]/#advanced-search/[:from]&[:to]&[:subject]&[:subset]&[:exclude]&[:within]&[:date]&has=%s",
-  :name "Gmail Advanced Search"}
- {:alias "gfun",
-  :url "http://letmegooglethatforyou.com?q=%s",
-  :name "Google- For Your Special Friends"}
- {:alias "wram",
-  :url "http://www.wolframalpha.com/input/?i=%s",
-  :name "Wolfram Computational Engine"}
-
- ;; Bookmark or delete
- ;; ------------------
  {:alias "art",
   :url "http://citeseer.ist.psu.edu/cis?q=%s&cs=1",
   :name "scientific articles"}
