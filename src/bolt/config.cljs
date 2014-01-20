@@ -2,5 +2,5 @@
 
 (def config
   {:commands
-   {:google "https://google.com/search?q=%s"
-    :youtube "https://youtube.com/search?q=%s"}})
+   {:google {:url "https://google.com/search?q=%s"}
+    :youtube {:alias "v" :url "https://youtube.com/search?q=%s"}}})

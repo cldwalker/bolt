@@ -30,13 +30,25 @@
             (dom/input #js {:type "text" :id "search_term" :autoFocus "autofocus"})
             (dom/input #js {:type "submit" :value "Search"}))))
 
+(def commands-index
+  (memoize (fn []
+             (merge
+               (->> (:commands config/config)
+                    (map (fn [[k v]] [k (:url v)]))
+                    (into {}))
+               (->> (:commands config/config)
+                    vals
+                    (filter :alias)
+                    (map (fn [cmd] [(keyword (:alias cmd)) (:url cmd)]))
+                    (into {}))))))
+
 (defn process-search*
   "For now this is just a local config lookup but this could interact
   with another service."
   [input]
   (let [[cmd & args] (string/split input #"\s+")]
     {:name cmd
-     :url (get-in config/config [:commands (keyword cmd)])
+     :url (get (commands-index) (keyword cmd))
      :args args}))
 
 (defn process-search
