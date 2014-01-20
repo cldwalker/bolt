@@ -1,2 +1,4 @@
 resources/public/js/out
+resources/public/js/*.js
+.lein-repl-history
 target
