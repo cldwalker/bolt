@@ -74,11 +74,10 @@
     (if url
       ;; TODO: url encode args
       (let [redirect-url (build-url url (:args cmd))]
-        (prn js/console redirect-url)
+        (om/update! app assoc :message "Redirecting ...")
         (set! (.-location js/window) redirect-url))
-      (do
-        (om/update! app assoc :error (str "No command found for " (:name cmd)))
-        nil))))
+      (om/update! app assoc :error (str "No command found for " (:name cmd))))
+    nil))
 
 (defn bolt-app [app owner]
   (reify
@@ -101,8 +100,11 @@
                (when (:error app)
                  (dom/div
                    #js {:className "alert alert-danger"}
-                   nil
                    (:error app)))
+               (when (:message app)
+                 (dom/div
+                   #js {:className "alert alert-success"}
+                   (:message app)))
                (om/build search-form app {:opts {:chan (om/get-state owner :chan)}})
                (when (:search-result app)
                  (handle-search-result app))))))
