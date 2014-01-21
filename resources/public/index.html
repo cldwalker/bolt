@@ -13,8 +13,8 @@
         <h1>Loading...</h1>
       </div>
       <script src="js/speech.js" type="text/javascript"></script>
-      <button class="button" onClick="startButton()">Start</button>
-      <button class="button" onClick="stopButton()">Stop</button>
+      <button class="button" onClick="bolt.speech.startButton()">Start</button>
+<!--       <button class="button" onClick="stopButton()">Stop</button> -->
       <div id="final_span"></div>
     </div>
 
@@ -24,5 +24,6 @@
     <script src="js/bolt.js" type="text/javascript"></script>
     <script type="text/javascript">goog.require("bolt.config");</script>
     <script type="text/javascript">goog.require("bolt.core");</script>
+    <script type="text/javascript">goog.require("bolt.speech");</script>
   </body>
 </html>

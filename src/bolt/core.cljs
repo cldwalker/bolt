@@ -125,4 +125,3 @@
   (fn [e] (secretary/dispatch! (.-token e))))
 
 (.setEnabled history true)
-
