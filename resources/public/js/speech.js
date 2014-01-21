@@ -3,13 +3,14 @@ var recognition = new webkitSpeechRecognition();
 recognition.continuous = true;
 recognition.interimResults = true;
 
-var final_span = '';
+var search_term = '';
 
 recognition.onstart = function() {
     console.log("Start!");
 }
 recognition.onresult = function(event) {
     var interim_transcript = '';
+    console.log(event.resultIndex, event.results.length);
     for (var i = event.resultIndex; i < event.results.length; ++i) {
 	if (event.results[i].isFinal) {
             final_transcript += event.results[i][0].transcript;
@@ -18,7 +19,7 @@ recognition.onresult = function(event) {
 	}
     }
 
-    final_span.innerHTML = final_transcript;
+    search_term.value = final_transcript;
     console.log("result!");
 
 }
@@ -32,7 +33,7 @@ recognition.onend = function() {
 
 function startButton(event) {
 
-    final_span = document.getElementById("final_span");
+    search_term = document.getElementById("search_term");
     final_transcript = '';
     recognition.start();
 
