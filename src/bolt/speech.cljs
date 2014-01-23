@@ -34,6 +34,10 @@
     (-> .-onresult (set! result))))
 
 (defn startButton [event]
-  (.start recognition))
+  (if (.-webkitSpeechRecognition js/window)
+    (do
+      (init)
+      (.start recognition))
+  (js/alert "Web Speech API is not supported by this browser. Use Chrome version 25 or later.")))
 
-(init)
+
