@@ -1,11 +1,15 @@
 (ns bolt.speech)
 
 (defn start []
-  (.log js/console "Start!"))
+  (.log js/console "Started speech capture."))
 
 (defn error [err]
-  (.log js/console "Error!" err))
+  (.log js/console "Error while capturing speech!" err))
 
+(defn end [err]
+  (.log js/console "Finished speech capture."))
+
+(def results "")
 
 (defn result [event]
   (let [result-indices (range (.-resultIndex event) (.. event -results -length))
@@ -19,24 +23,20 @@
       (-> (.querySelector js/document "#search_term") .-value (set! result))
       (def results (str results result)))))
 
-(declare results recognition)
-
-(defn init
+(defn ->recognition
   []
-  (def recognition (js/webkitSpeechRecognition.))
-  (def results "")
-
-  (doto recognition
+  (doto (js/webkitSpeechRecognition.)
     (-> .-continous (set! true))
     (-> .-interimResults (set! true))
     (-> .-onstart (set! start))
     (-> .-onerror (set! error))
-    (-> .-onresult (set! result))))
+    (-> .-onresult (set! result))
+    (-> .-onend (set! end))))
 
 (defn startButton [event]
   (if (.-webkitSpeechRecognition js/window)
     (do
-      (init)
+      (def recognition (->recognition))
       (.start recognition))
   (js/alert "Web Speech API is not supported by this browser. Use Chrome version 25 or later.")))
 
