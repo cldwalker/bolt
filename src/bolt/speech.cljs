@@ -7,28 +7,25 @@
   (.log js/console "Error!" err))
 
 
-;; recognition.onresult = function(event) {
-;;     var interim_transcript = '';
-;;     console.log(event.resultIndex, event.results.length);
-;;     for (var i = event.resultIndex; i < event.results.length; ++i) {
-;; 	if (event.results[i].isFinal) {
-;;             final_transcript += event.results[i][0].transcript;
-;; 	} else {
-;;             interim_transcript += event.results[i][0].transcript;
-;; 	}
-;;     }
-
-;;     search_term.value = final_transcript;
-;;     console.log("result!");
-
-;; }
-
 (defn result [event]
-  (.log js/console (.-resultIndex event) (.. event -results -length)))
+  (let [result-indices (range (.-resultIndex event) (.. event -results -length))
+        result (reduce (fn [accum idx]
+                         (.log js/console "STEP" idx (-> event .-results))
+                         (str accum (-> event .-results (aget idx) (aget 0) .-transcript)))
+                       "" result-indices)]
+    (.log js/console "Interim result" result)
+    (when (some #(-> event .-results (aget %) .-isFinal) result-indices)
+      (.log js/console "Final result" result)
+      (-> (.querySelector js/document "#search_term") .-value (set! result))
+      (def results (str results result)))))
+
+(declare results recognition)
 
 (defn init
   []
   (def recognition (js/webkitSpeechRecognition.))
+  (def results "")
+
   (doto recognition
     (-> .-continous (set! true))
     (-> .-interimResults (set! true))
