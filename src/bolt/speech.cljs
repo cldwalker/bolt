@@ -1,4 +1,6 @@
-(ns bolt.speech)
+(ns bolt.speech
+  (:require-macros [cljs.core.async.macros :refer [go]])
+  (:require [cljs.core.async :refer [put! <! >! chan timeout]]))
 
 (declare recognizing recognition)
 
@@ -34,15 +36,30 @@
       (-> (.querySelector js/document "#search_term") .-value (set! result))
       (def results (str results result)))))
 
+(defn event-loop [ch]
+  (go (while true
+        (let [[event event-data] (<! ch)]
+          #_(.log js/console (pr-str event event-data))
+          (case event
+            :start (start event-data)
+            :error (error event-data)
+            :result (result event-data)
+            :end (end event-data)
+            (println "Unknown event" event))))))
+
 (defn ->recognition
   []
-  (doto (js/webkitSpeechRecognition.)
-    #_(-> .-continuous (set! true)) ;; TODO
-    (-> .-interimResults (set! true))
-    (-> .-onstart (set! start))
-    (-> .-onerror (set! error))
-    (-> .-onresult (set! result))
-    (-> .-onend (set! end))))
+  (let [recognition (js/webkitSpeechRecognition.)
+        ch (chan)]
+    (doto recognition
+      #_(-> .-continuous (set! true)) ;; TODO
+      (-> .-interimResults (set! true))
+      (-> .-onstart (set! #(put! ch [:start %])))
+      (-> .-onerror (set! #(put! ch [:error %])))
+      (-> .-onresult (set! #(put! ch [:result %])))
+      (-> .-onend (set! #(put! ch [:end %]))))
+    (event-loop ch)
+    recognition))
 
 (defn toggle-speech [event]
   (if (.-webkitSpeechRecognition js/window)
