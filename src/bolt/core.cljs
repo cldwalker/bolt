@@ -24,15 +24,6 @@
                   .-value)])
   false)
 
-(defn search-form [app owner {:keys [chan]}]
-  (om/component
-   (dom/form #js {:onSubmit #(submit-search chan %)
-                  :className "jumbotron"}
-             (dom/input #js {:id "search_term" :type "text" :autoFocus "autofocus"})
-             (dom/a #js {:className "btn btn-default mic" :href "#" :onClick speech/toggle-speech }
-                         (dom/img #js {:id "mic" :src "img/mic.gif"}))
-             (dom/input #js {:type "submit" :value "Search" :className "btn btn-default btn-lg"}))))
-
 (def commands-index
   (memoize (fn []
              (merge
@@ -44,6 +35,20 @@
                     (filter :alias)
                     (map (fn [cmd] [(keyword (:alias cmd)) (:url cmd)]))
                     (into {}))))))
+
+(defn search-form [app owner {:keys [chan]}]
+  (om/component
+   (dom/form #js {:onSubmit #(submit-search chan %)
+                  :className "jumbotron"}
+             (apply dom/datalist #js {:id "commands"}
+                    (map #(dom/option #js {:value (name %)})
+                         (sort (keys (commands-index)))))
+             (dom/input #js {:id "search_term" :type "text" :autoFocus "autofocus" :list "commands"})
+             (dom/a #js {:className "btn btn-default mic" :href "#" :onClick speech/toggle-speech }
+                         (dom/img #js {:id "mic" :src "img/mic.gif"}))
+             (dom/input #js {:type "submit" :value "Search" :className "btn btn-default btn-lg"}))))
+
+
 
 (defn process-search*
   "For now this is just a local config lookup but this could interact
