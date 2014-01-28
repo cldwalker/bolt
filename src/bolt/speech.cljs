@@ -1,13 +1,24 @@
 (ns bolt.speech)
 
-(defn start []
-  (.log js/console "Started speech capture."))
+(declare recognizing recognition)
+
+(defn set-image [path]
+  (-> (.querySelector js/document "#mic") .-src (set! path)))
+
+(defn start [e]
+  (.log js/console "Started speech capture.")
+  (def recognizing true)
+  (set-image "img/mic-animate.gif"))
 
 (defn error [err]
-  (.log js/console "Error while capturing speech!" err))
+  (.log js/console "Error while capturing speech!" err)
+  (def recognizing false)
+  (set-image "img/mic-slash.gif"))
 
 (defn end [err]
-  (.log js/console "Finished speech capture."))
+  (.log js/console "Finished speech capture.")
+  (def recognizing false)
+  (set-image "img/mic.gif"))
 
 (def results "")
 
@@ -26,18 +37,20 @@
 (defn ->recognition
   []
   (doto (js/webkitSpeechRecognition.)
-    (-> .-continous (set! true))
+    #_(-> .-continuous (set! true)) ;; TODO
     (-> .-interimResults (set! true))
     (-> .-onstart (set! start))
     (-> .-onerror (set! error))
     (-> .-onresult (set! result))
     (-> .-onend (set! end))))
 
-(defn startButton [event]
+(defn toggle-speech [event]
   (if (.-webkitSpeechRecognition js/window)
     (do
-      (def recognition (->recognition))
-      (.start recognition))
+      (when-not recognition
+        (def recognition (->recognition)))
+
+      (if recognizing (.stop recognition) (.start recognition)))
   (js/alert "Web Speech API is not supported by this browser. Use Chrome version 25 or later.")))
 
 

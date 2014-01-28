@@ -29,8 +29,8 @@
    (dom/form #js {:onSubmit #(submit-search chan %)
                   :className "jumbotron"}
              (dom/input #js {:id "search_term" :type "text" :autoFocus "autofocus"})
-             (dom/a #js {:className "btn btn-default mic" :href "#" :onClick speech/startButton }
-                         (dom/img #js {:src "img/mic.gif"}))
+             (dom/a #js {:className "btn btn-default mic" :href "#" :onClick speech/toggle-speech }
+                         (dom/img #js {:id "mic" :src "img/mic.gif"}))
              (dom/input #js {:type "submit" :value "Search" :className "btn btn-default btn-lg"}))))
 
 (def commands-index
