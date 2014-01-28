@@ -2,12 +2,13 @@
   (:require-macros [cljs.core.async.macros :refer [go alt!]]
                    [secretary.macros :refer [defroute]])
   (:require [goog.events :as events]
-              [cljs.core.async :refer [put! <! >! chan timeout]]
-              [om.core :as om :include-macros true]
-              [om.dom :as dom :include-macros true]
-              [secretary.core :as secretary]
-              [clojure.string :as string]
-              [bolt.config :as config])
+            [cljs.core.async :refer [put! <! >! chan timeout]]
+            [om.core :as om :include-macros true]
+            [om.dom :as dom :include-macros true]
+            [secretary.core :as secretary]
+            [clojure.string :as string]
+            [bolt.speech :as speech]
+            [bolt.config :as config])
   (:import [goog History]
            [goog.history EventType]))
 
@@ -27,8 +28,10 @@
   (om/component
    (dom/form #js {:onSubmit #(submit-search chan %)
                   :className "jumbotron"}
-            (dom/input #js {:type "text" :id "search_term" :autoFocus "autofocus"})
-            (dom/input #js {:type "submit" :value "Search"}))))
+             (dom/input #js {:id "search_term" :type "text" :autoFocus "autofocus"})
+             (dom/a #js {:className "btn btn-default mic" :href "#" :onClick speech/startButton }
+                         (dom/img #js {:src "img/mic.gif"}))
+             (dom/input #js {:type "submit" :value "Search" :className "btn btn-default btn-lg"}))))
 
 (def commands-index
   (memoize (fn []
