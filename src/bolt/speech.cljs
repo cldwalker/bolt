@@ -3,7 +3,7 @@
   (:require [cljs.core.async :refer [put! <! >! chan timeout]]
             [clojure.string :as string]))
 
-(declare recognizing recognition img-elem input-elem)
+(declare recognizing recognition img-elem input-elem button-elem)
 
 (defn set-image [path]
   (-> img-elem .-src (set! path)))
@@ -35,6 +35,7 @@
     (when (some #(-> event .-results (aget %) .-isFinal) result-indices)
       (.log js/console "Final result" result)
       (-> input-elem .-value (set! (string/lower-case result)))
+      (.click button-elem)
       (def results (str results result)))))
 
 (defn event-loop [ch]
@@ -62,11 +63,12 @@
     (event-loop ch)
     recognition))
 
-(defn toggle-speech [input-id event]
+(defn toggle-speech [input-id button-id event]
   (if (.-webkitSpeechRecognition js/window)
     (do
       (when-not recognition
         (def input-elem (.querySelector js/document input-id))
+        (def button-elem (.querySelector js/document button-id))
         (def img-elem (.-target event))
         (def recognition (->recognition)))
 
