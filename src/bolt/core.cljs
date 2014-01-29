@@ -44,7 +44,7 @@
                     (map #(dom/option #js {:value (name %)})
                          (sort (keys (commands-index)))))
              (dom/input #js {:id "search_term" :type "text" :autoFocus "autofocus" :list "commands"})
-             (dom/a #js {:className "btn btn-default mic" :href "#" :onClick speech/toggle-speech }
+             (dom/a #js {:className "btn btn-default mic" :href "#" :onClick (partial speech/toggle-speech "#search_term") }
                          (dom/img #js {:id "mic" :src "img/mic.gif"}))
              (dom/input #js {:type "submit" :value "Search" :className "btn btn-default btn-lg"}))))
 

@@ -1,11 +1,12 @@
 (ns bolt.speech
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [cljs.core.async :refer [put! <! >! chan timeout]]))
+  (:require [cljs.core.async :refer [put! <! >! chan timeout]]
+            [clojure.string :as string]))
 
-(declare recognizing recognition)
+(declare recognizing recognition img-elem input-elem)
 
 (defn set-image [path]
-  (-> (.querySelector js/document "#mic") .-src (set! path)))
+  (-> img-elem .-src (set! path)))
 
 (defn start [e]
   (.log js/console "Started speech capture.")
@@ -17,7 +18,7 @@
   (def recognizing false)
   (set-image "img/mic-slash.gif"))
 
-(defn end [err]
+(defn end [e]
   (.log js/console "Finished speech capture.")
   (def recognizing false)
   (set-image "img/mic.gif"))
@@ -33,7 +34,7 @@
     (.log js/console "Interim result" result)
     (when (some #(-> event .-results (aget %) .-isFinal) result-indices)
       (.log js/console "Final result" result)
-      (-> (.querySelector js/document "#search_term") .-value (set! result))
+      (-> input-elem .-value (set! (string/lower-case result)))
       (def results (str results result)))))
 
 (defn event-loop [ch]
@@ -61,10 +62,12 @@
     (event-loop ch)
     recognition))
 
-(defn toggle-speech [event]
+(defn toggle-speech [input-id event]
   (if (.-webkitSpeechRecognition js/window)
     (do
       (when-not recognition
+        (def input-elem (.querySelector js/document input-id))
+        (def img-elem (.-target event))
         (def recognition (->recognition)))
 
       (if recognizing (.stop recognition) (.start recognition)))
