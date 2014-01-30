@@ -1,7 +1,8 @@
 (ns ^:shared bolt.config)
 
 (def config
-  {:commands
+  {:default :google
+   :commands
    {:google {:alias "g" :url "https://google.com/search?q=%s"}
     :amazon {:alias "a" :url "http://www.amazon.com/s/?field-keywords=%s"}
     :google-maps {:alias "map" :url "https://www.google.com/maps/preview#!q=%s"}

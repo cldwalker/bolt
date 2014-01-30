@@ -54,10 +54,15 @@
   "For now this is just a local config lookup but this could interact
   with another service."
   [input]
-  (let [[cmd & args] (string/split input #"\s+")]
-    {:name cmd
-     :url (get (commands-index) (keyword cmd))
-     :args args}))
+  ;; decode to use as a default search engine
+  (let [[cmd & args] (-> input js/decodeURIComponent (string/split #"\s+"))
+        url (get (commands-index) (keyword cmd))
+        [cmd url args] (if (and (nil? url) (:default config/config))
+                         [(:default config/config)
+                          (get (commands-index) (:default config/config))
+                          (into [cmd] args)]
+                         [cmd url args])]
+    {:name cmd :url url :args args}))
 
 (defn process-search
   [event-data chan]
@@ -82,7 +87,8 @@
     (if url
       ;; TODO: url encode args
       (let [redirect-url (build-url url (:args cmd))]
-        (om/update! app assoc :message "Redirecting ...")
+        (om/update! app assoc :message
+                    (string/replace-first "Redirecting with %s ..." "%s" (name (:name cmd))))
         (set! (.-location js/window) redirect-url))
       (om/update! app assoc :error (str "No command found for " (:name cmd))))
     nil))
