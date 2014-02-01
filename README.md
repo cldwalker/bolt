@@ -7,3 +7,7 @@ etc.
 $ lein cljsbuild once dev
 $ open resources/public/index.html
 ```
+
+## Credits
+
+Images were taken from [this sample project](https://github.com/GoogleChrome/webplatform-samples)
