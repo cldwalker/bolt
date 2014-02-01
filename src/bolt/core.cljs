@@ -43,8 +43,7 @@
              (apply dom/datalist #js {:id "commands"}
                     (map #(dom/option #js {:value (name %)})
                          (sort (keys (commands-index)))))
-             ;; without onChange, om 0.3.1 won't allow input
-             (dom/input #js {:id "search_term" :type "text" :autoFocus "autofocus" :list "commands" :onChange (constantly nil) })
+             (dom/input #js {:id "search_term" :type "text" :autoFocus "autofocus" :list "commands"})
              (dom/a #js {:className "btn btn-default mic" :href "#" :onClick (partial speech/toggle-speech "#search_term" "#search_submit") }
                          (dom/img #js {:id "mic" :src "img/mic.gif"}))
              (dom/input #js {:id "search_submit" :type "submit" :value "Search" :className "btn btn-default btn-lg"}))))
