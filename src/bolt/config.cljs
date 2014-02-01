@@ -10,7 +10,7 @@
     :google-group {:alias "ggs" :url "http://groups.google.com/groups/dir?q=%s"}
     :youtube {:alias "v" :url "https://www.youtube.com/results?search_query=%s&utm_source=opensearch"}
     :google-define {:alias "gdef" :url "http://www.google.com/search?q=define:%s"}
-    :wikipedia {:alias "w" :url "http://en.wikipedia.org/w/index.php?search=%s&fulltext=Search"}
+    :wikipedia {:alias "w" :url "http://en.wikipedia.org/wiki/Special:Search?search=%s"}
     :gmail {:alias "gmas" :url "https://mail.google.com/mail/u/0/?shva=1#search/%s"}
     :wolfram {:alias "wram" :url "http://www.wolframalpha.com/input/?i=%s"}
     :ltgtfy {:alias "gfun" :url "http://lmgtfy.com/?q=%s"}
