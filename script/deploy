@@ -5,9 +5,7 @@ rm -rf out
 lein cljsbuild once dev
 cp -R resources/public out
 
-#git checkout gh-pages
-#cp -Rfv out/public/* .
-#rm -rf generated-js/out/
-#mv semtag-web.html index.html
-#git add generated-js *.css *.js index.html
-#git commit -m "Assets rebuilt"
+git checkout gh-pages
+cp -Rf out/ .
+git add js css img index.html
+git commit -m "Assets rebuilt"
