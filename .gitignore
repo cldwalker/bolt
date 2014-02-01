@@ -3,5 +3,3 @@ resources/public/js/*.js
 .lein-repl-history
 target
 out
-resources/queriac-cmds.txt
-src/scratch.clj
