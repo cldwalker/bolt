@@ -34,8 +34,8 @@
     :devdocs {:alias "dev" :url "http://devdocs.io/#q=%s"} ;voice-trouble
 
     ;; semtag
-    :search {:alias "pss" :url "http://semtag.me#/search?query=%s"}
-    :regex-search {:alias "psr" :url "http://semtag.me#/search?query=%s&search-type=regex"}
+    :tag {:alias "pss" :url "http://semtag.me#/search?query=%s"}
+    :search {:alias "psr" :url "http://semtag.me#/search?query=%s&search-type=regex"}
     :type {:alias "pst" :url "http://semtag.me#/type/%s"}
     :thing {:alias "pse" :url "http://semtag.me#/thing/%s"} ;voice-trouble
     ;; local dev
