@@ -36,6 +36,8 @@
                     (map (fn [cmd] [(keyword (:alias cmd)) (:url cmd)]))
                     (into {}))))))
 
+(def toggle-speech (partial speech/toggle-speech "#search_term" "#search_submit"))
+
 (defn search-form [app owner {:keys [chan]}]
   (om/component
    (dom/form #js {:onSubmit #(submit-search chan %)
@@ -44,7 +46,7 @@
                     (map #(dom/option #js {:value (name %)})
                          (sort (keys (commands-index)))))
              (dom/input #js {:id "search_term" :type "text" :autoFocus "autofocus" :list "commands"})
-             (dom/a #js {:className "btn btn-default mic" :href "#" :onClick (partial speech/toggle-speech "#search_term" "#search_submit") }
+             (dom/a #js {:className "btn btn-default mic" :href "#" :onClick toggle-speech}
                          (dom/img #js {:id "mic" :src "img/mic.gif"}))
              (dom/input #js {:id "search_submit" :type "submit" :value "Search" :className "btn btn-default btn-lg"}))))
 
@@ -126,7 +128,9 @@
 ;; Routing
 
 (defroute "/" []
-  (om/root app-state bolt-app (.getElementById js/document "app")))
+  (om/root app-state bolt-app (.getElementById js/document "app"))
+  (when (-> window.location.search (.indexOf "start=") (> -1))
+    (toggle-speech #js {:target (.querySelector js/document "#mic")})))
 
 (defroute "/to/:command" [command]
   (om/root app-state bolt-app (.getElementById js/document "app"))
