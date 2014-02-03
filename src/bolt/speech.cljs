@@ -23,20 +23,16 @@
   (def recognizing false)
   (set-image "img/mic.gif"))
 
-(def results "")
-
 (defn result [event]
   (let [result-indices (range (.-resultIndex event) (.. event -results -length))
         result (reduce (fn [accum idx]
-                         (.log js/console "STEP" idx (-> event .-results))
                          (str accum (-> event .-results (aget idx) (aget 0) .-transcript)))
                        "" result-indices)]
-    (.log js/console "Interim result" result)
+    (.log js/console "Possible speech result:" result)
     (when (some #(-> event .-results (aget %) .-isFinal) result-indices)
-      (.log js/console "Final result" result)
+      (.log js/console "Final speech result:" result)
       (-> input-elem .-value (set! (string/lower-case result)))
-      (.click button-elem)
-      (def results (str results result)))))
+      (.click button-elem))))
 
 (defn event-loop [ch]
   (go (while true
@@ -54,7 +50,6 @@
   (let [recognition (js/webkitSpeechRecognition.)
         ch (chan)]
     (doto recognition
-      #_(-> .-continuous (set! true)) ;; TODO
       (-> .-interimResults (set! true))
       (-> .-onstart (set! #(put! ch [:start %])))
       (-> .-onerror (set! #(put! ch [:error %])))
