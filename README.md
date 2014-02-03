@@ -17,7 +17,7 @@ Try the [demo](https://googledrive.com/host/0B66TjgTudHqHbHlQUnpGaVdHS28/index.h
 To use the demo as I use it:
 
 * As my default search engine.
-  * In Chrome, you'll find this in settings under "Manage search engines...". Add an
+  * In Mac Chrome, you'll find this in settings under "Manage search engines...". Add an
   entry for `https://googledrive.com/host/0B66TjgTudHqHbHlQUnpGaVdHS28/index.html#/to/%s` and click
   "Make default".
   * Any commands I type into the address bar are translated by bolt.
