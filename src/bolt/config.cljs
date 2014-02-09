@@ -4,6 +4,7 @@
   {:default :google
    :commands
    {:google {:alias "g" :url "https://google.com/search?q=%s"}
+    :google-lucky {:alias "gl" :url "http://www.google.com/search?sourceid=navclient&btnI=I&q=%s"}
     :amazon {:alias "a" :url "http://www.amazon.com/s/?field-keywords=%s"}
     :google-maps {:alias "map" :url "https://www.google.com/maps/preview#!q=%s"}
     :archive {:alias "arch" :url "http://web.archive.org/web/*/%s"}
@@ -21,6 +22,7 @@
     :freebase {:alias "fb" :url "http://www.freebase.com/search?query=%s"}
     :twitter {:url "https://twitter.com/search?q=%s"}
     :urbandictionary {:alias "urban" :url "http://www.urbandictionary.com/define.php?term=%s"}
+    :github-lucky {:alias "ghl" :url "http://tagaholic.me/github-lucky/?query=%s"}
 
     ;; not used on phone
     :google-group {:alias "ggs" :url "http://groups.google.com/groups/dir?q=%s"}
