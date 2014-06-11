@@ -23,6 +23,7 @@
     :twitter {:url "https://twitter.com/search?q=%s"}
     :urbandictionary {:alias "urban" :url "http://www.urbandictionary.com/define.php?term=%s"}
     :github-lucky {:alias "ghl" :url "http://tagaholic.me/github-lucky/?query=%s"}
+    :crossclj {:alias "cclj" :url "http://crossclj.info/search?q=%s"}
 
     ;; not used on phone
     :google-group {:alias "ggs" :url "http://groups.google.com/groups/dir?q=%s"}
