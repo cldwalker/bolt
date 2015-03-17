@@ -2,23 +2,25 @@
   :description "FIXME: write this!"
   :url "http://example.com/FIXME"
 
-  :dependencies [[org.clojure/clojure "1.5.1"]
-                 [org.clojure/clojurescript "0.0-2138"]
-                 [org.clojure/core.async "0.1.267.0-0d7780-alpha"]
-                 [secretary "0.4.0"]
-                 [om "0.1.5"]]
+  :dependencies [
+                 [org.clojure/clojure "1.6.0" :scope "provided"]
+                 [org.clojure/clojurescript "0.0-3117" :scope "provided"]
+                 [rum "0.2.6"]
+                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]
+                 ;; [secretary "0.4.0"]
+                 ]
 
-  :plugins [[lein-cljsbuild "1.0.1"]]
+  :plugins [[lein-cljsbuild "1.0.5"]]
 
   :cljsbuild {
               :builds [{:id "dev"
                         :source-paths ["src"]
-                        :compiler {
+                        :compiler {:main "bolt.core"
                                    :output-to "resources/public/js/bolt.js"
                                    :output-dir "resources/public/js/out"
                                    :optimizations :none
                                    :source-map true
-                                   :externs ["om/externs/react.js"]}}
+                                   :asset-path "js/out"}}
                        {:id "release"
                         :source-paths ["src"]
                         :compiler {
