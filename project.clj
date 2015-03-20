@@ -2,13 +2,11 @@
   :description "FIXME: write this!"
   :url "http://example.com/FIXME"
 
-  :dependencies [
-                 [org.clojure/clojure "1.6.0" :scope "provided"]
+  :dependencies [[org.clojure/clojure "1.6.0" :scope "provided"]
                  [org.clojure/clojurescript "0.0-3117" :scope "provided"]
                  [rum "0.2.6"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 ;; [secretary "0.4.0"]
-                 ]
+                 [secretary "0.4.0"]]
 
   :plugins [[lein-cljsbuild "1.0.5"]]
 

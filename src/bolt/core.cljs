@@ -1,10 +1,15 @@
 (ns bolt.core
-  (:require
-   [cljs.core.async :refer [put! <! >! chan timeout]]
-   [bolt.config :as config]
-   [clojure.string :as string]
-   [rum])
-  (:require-macros [cljs.core.async.macros :refer [go]]))
+  (:require [cljs.core.async :refer [put! <! >! chan timeout]]
+            [bolt.config :as config]
+            [bolt.speech :as speech]
+            [clojure.string :as string]
+            [secretary.core :as secretary]
+            [goog.events :as events]
+            [rum])
+  (:require-macros [cljs.core.async.macros :refer [go]]
+                   [secretary.macros :refer [defroute]])
+  (:import [goog History]
+           [goog.history EventType]))
 
 (def app-state (atom {}))
 (def event-ch (chan 10))
@@ -65,19 +70,19 @@
 
 ;; UI
 
-(defn submit-search [e]
-  (put! event-ch [:service.search
-                  (-> (.querySelector js/document "#search_term")
-                      .-value)])
+(defn submit-search [e ch]
+  (put! ch [:service.search
+            (-> (.querySelector js/document "#search_term")
+                .-value)])
   false)
 
 (rum/defc search-form []
- [:form {:onSubmit submit-search
+ [:form {:onSubmit #(submit-search % event-ch)
          :className "jumbotron"}
   [:datalist#commands (map #(vector :option {:value (name %)})
                            (sort (keys (commands-index))))]
   [:input#search_term {:type "text" :autoFocus "autofocus" :list "commands"}]
-  [:a {:className "btn btn-default mic" :href "#" :onClick #(prn "MIC" %)}
+  [:a {:className "btn btn-default mic" :href "#" :onClick (partial speech/toggle-speech "#search_term" "#search_submit")}
    [:img#mic {:src "img/mic.gif"}]]
   [:input#search_submit {:type "submit" :value "Search" :className "btn btn-default btn-lg"}]])
 
@@ -98,4 +103,20 @@
      (when message
        [:div {:className "alert alert-success"} message])]))
 
-(rum/mount (bolt-app)(.getElementById js/document "app"))
+;; Routing
+
+(defroute "/" []
+  (rum/mount (bolt-app) (.getElementById js/document "app")))
+
+;; For browser commands
+(defroute "/to/:command" [command]
+  ;; Faster commands (no react components) in exchange for no alerts
+  ((:will-mount event-loop) {})
+  (put! event-ch [:service.search command]))
+
+(def history (History.))
+
+(events/listen history EventType/NAVIGATE
+  (fn [e] (secretary/dispatch! (.-token e))))
+
+(.setEnabled history true)
