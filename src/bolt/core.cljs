@@ -68,6 +68,26 @@
     :ui.search      (handle-search-result app event-data)
     (.log js/console "No event found for" event event-data)))
 
+;; UI debugging
+(def dom->component (atom {}))
+
+;; Mixin to debug state for component by selector
+;; Just drop it on any defc e.g. < debuggable
+(def debuggable
+  {:did-mount (fn [state]
+                ;; Save component since another mixin may change state later
+                (when-let [dom (.getDOMNode (:rum/react-component state))]
+                  (swap! dom->component assoc dom (:rum/react-component state)))
+                state)})
+
+(defn selector->state [selector]
+  (if-let [component (cljs.core/get @dom->component (js/document.querySelector selector))]
+    @(aget (.-props component) ":rum/state")
+    (cljs.core/println "No component found")))
+
+#_(selector->state "#app div")
+#_(selector->state "input")
+
 ;; UI
 
 (defn submit-search [e ch]
