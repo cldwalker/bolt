@@ -11,8 +11,7 @@
   (:import [goog History]
            [goog.history EventType]))
 
-(def user-input (atom ""))
-(def app-state (atom {}))
+(def app-state (atom {:user-input ""}))
 (def event-ch (chan 10))
 (def commands-index
   (memoize (fn []
@@ -72,21 +71,20 @@
 ;; UI
 
 (defn submit-search [e ch]
-  (put! ch [:service.search @user-input])
+  (put! ch [:service.search (:user-input @app-state)])
   false)
 
-(rum/defc input < rum/reactive [ref attributes]
+(rum/defc input < rum/cursored rum/cursored-watch [ref attributes]
   [:input (merge attributes {:type "text"
-                             :value (rum/react ref)
+                             :value @ref
                              :on-change #(reset! ref (.. % -target -value))})])
-
 (rum/defc search-form []
  [:form {:onSubmit #(submit-search % event-ch)
          :className "jumbotron"}
   [:datalist#commands (map #(vector :option {:value (name %)
                                              :key (str "command-" (name %))})
                            (sort (keys (commands-index))))]
-  (input user-input {:autoFocus "autofocus" :list "commands" :id "search_term"})
+  (input (rum/cursor app-state [:user-input]) {:autoFocus "autofocus" :list "commands" :id "search_term"})
   [:a {:className "btn btn-default mic" :href "#" :onClick (partial speech/toggle-speech "#search_term" "#search_submit")}
    [:img#mic {:src "img/mic.gif"}]]
   [:input#search_submit {:type "submit" :value "Search" :className "btn btn-default btn-lg"}]])
