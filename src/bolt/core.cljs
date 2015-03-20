@@ -11,6 +11,7 @@
   (:import [goog History]
            [goog.history EventType]))
 
+(def user-input (atom ""))
 (def app-state (atom {}))
 (def event-ch (chan 10))
 (def commands-index
@@ -71,10 +72,13 @@
 ;; UI
 
 (defn submit-search [e ch]
-  (put! ch [:service.search
-            (-> (.querySelector js/document "#search_term")
-                .-value)])
+  (put! ch [:service.search @user-input])
   false)
+
+(rum/defc input < rum/reactive [ref attributes]
+  [:input (merge attributes {:type "text"
+                             :value (rum/react ref)
+                             :on-change #(reset! ref (.. % -target -value))})])
 
 (rum/defc search-form []
  [:form {:onSubmit #(submit-search % event-ch)
@@ -82,7 +86,7 @@
   [:datalist#commands (map #(vector :option {:value (name %)
                                              :key (str "command-" (name %))})
                            (sort (keys (commands-index))))]
-  [:input#search_term {:type "text" :autoFocus "autofocus" :list "commands"}]
+  (input user-input {:autoFocus "autofocus" :list "commands" :id "search_term"})
   [:a {:className "btn btn-default mic" :href "#" :onClick (partial speech/toggle-speech "#search_term" "#search_submit")}
    [:img#mic {:src "img/mic.gif"}]]
   [:input#search_submit {:type "submit" :value "Search" :className "btn btn-default btn-lg"}]])
