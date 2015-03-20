@@ -79,7 +79,8 @@
 (rum/defc search-form []
  [:form {:onSubmit #(submit-search % event-ch)
          :className "jumbotron"}
-  [:datalist#commands (map #(vector :option {:value (name %)})
+  [:datalist#commands (map #(vector :option {:value (name %)
+                                             :key (str "command-" (name %))})
                            (sort (keys (commands-index))))]
   [:input#search_term {:type "text" :autoFocus "autofocus" :list "commands"}]
   [:a {:className "btn btn-default mic" :href "#" :onClick (partial speech/toggle-speech "#search_term" "#search_submit")}
