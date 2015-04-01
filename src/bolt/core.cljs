@@ -53,13 +53,19 @@
       :else (apply string/replace url "%s" args))))
 
 (defn handle-search-result [app {:keys [url] :as cmd}]
-  (if url
-    ;; TODO: url encode args
-    (let [redirect-url (build-url url (:args cmd))]
-      (swap! app assoc :message
-             (string/replace-first "Redirecting with %s ..." "%s" (name (:name cmd))))
-      (set! (.-location js/window) redirect-url))
-    (swap! app assoc :error (str "No command found for " (:name cmd)))))
+  (cond
+   (re-find #"nosubmit" js/window.location.search)
+   (js/alert (str "Would submit: " cmd))
+
+   (seq url)
+   ;; TODO: url encode args
+   (let [redirect-url (build-url url (:args cmd))]
+     (swap! app assoc :message
+            (string/replace-first "Redirecting with %s ..." "%s" (name (:name cmd))))
+     (set! (.-location js/window) redirect-url))
+
+   :else
+   (swap! app assoc :error (str "No command found for " (:name cmd)))))
 
 (defn handle-event [app event event-data]
   (.log js/console "Event: " (pr-str event event-data))
