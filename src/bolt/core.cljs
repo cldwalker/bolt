@@ -5,11 +5,11 @@
             [clojure.string :as string]
             [secretary.core :as secretary]
             [goog.events :as events]
+            [goog.history.EventType :as EventType]
             [rum])
   (:require-macros [cljs.core.async.macros :refer [go]]
                    [secretary.macros :refer [defroute]])
-  (:import [goog History]
-           [goog.history EventType]))
+  (:import [goog History]))
 
 (def app-state (atom {:user-input ""
                       :event-ch (chan 10)}))
