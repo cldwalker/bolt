@@ -17,6 +17,7 @@
     :lastfm {:url "http://www.last.fm/search?q=%s"}
     :clojuredocs {:alias "cd" :url "http://clojuredocs.org/search?q=%s"}
     :flickr {:alias "fl" :url "http://www.flickr.com/search/?q=%s"}
+    :scholar {:alias "sc" :url "https://scholar.google.com/scholar?q=%s"}
 
     ;; just for voice
     :github {:alias "gh" :url "https://github.com/search?q=%s&ref=simplesearch"}
