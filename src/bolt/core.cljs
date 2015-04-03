@@ -11,8 +11,8 @@
   (:import [goog History]
            [goog.history EventType]))
 
-(def app-state (atom {:user-input ""}))
-(def event-ch (chan 10))
+(def app-state (atom {:user-input ""
+                      :event-ch (chan 10)}))
 (def commands-index
   (memoize (fn []
              (merge
@@ -70,7 +70,7 @@
 (defn handle-event [app event event-data]
   (.log js/console "Event: " (pr-str event event-data))
   (case event
-    :service.search (process-search event-data event-ch)
+    :service.search (process-search event-data (:event-ch @app))
     :ui.search      (handle-search-result app event-data)
     (.log js/console "No event found for" event event-data)))
 
@@ -96,29 +96,29 @@
 
 ;; UI
 
-(defn submit-search [e ch]
-  (put! ch [:service.search (:user-input @app-state)])
+(defn submit-search [e ch user-input]
+  (put! ch [:service.search user-input])
   false)
 
 (rum/defc input < rum/cursored rum/cursored-watch [ref attributes]
   [:input (merge attributes {:type "text"
                              :value @ref
                              :on-change #(reset! ref (.. % -target -value))})])
-(rum/defc search-form []
- [:form {:onSubmit #(submit-search % event-ch)
+(rum/defc search-form [app]
+ [:form {:onSubmit #(submit-search % (:event-ch @app) (:user-input @app))
          :className "jumbotron"}
   [:datalist#commands (map #(vector :option {:value (name %)
                                              :key (str "command-" (name %))})
                            (sort (keys (commands-index))))]
-  (input (rum/cursor app-state [:user-input]) {:autoFocus "autofocus" :list "commands" :id "search_term"})
-  [:a {:className "btn btn-default mic" :href "#" :onClick (partial speech/toggle-speech "#search_term" "#search_submit")}
+  (input (rum/cursor app [:user-input]) {:autoFocus "autofocus" :list "commands" :id "search_term"})
+  [:a {:className "btn btn-default mic" :href "#" :onClick (partial speech/toggle-speech app)}
    [:img#mic {:src "img/mic.gif"}]]
-  [:input#search_submit {:type "submit" :value "Search" :className "btn btn-default btn-lg"}]])
+  [:input {:type "submit" :value "Search" :className "btn btn-default btn-lg"}]])
 
 (def event-loop
   {:will-mount (fn [state]
                  (go (while true
-                         (let [[event event-data](<! event-ch)]
+                         (let [[event event-data](<! (:event-ch @app-state))]
                            (handle-event app-state event event-data))))
                  state)})
 
@@ -128,7 +128,7 @@
      [:h1 "Welcome to Bolt!"]
      (when error
        [:div {:className "alert alert-danger"} error])
-     (search-form)
+     (search-form app-state)
      (when message
        [:div {:className "alert alert-success"} message])]))
 
@@ -141,7 +141,7 @@
 (defroute "/to/:command" [command]
   ;; Faster commands (no react components) in exchange for no alerts
   ((:will-mount event-loop) {})
-  (put! event-ch [:service.search command]))
+  (put! (:event-ch @app-state) [:service.search command]))
 
 (def history (History.))
 
