@@ -11,6 +11,7 @@
     :youtube {:alias "v" :url "https://www.youtube.com/results?search_query=%s&utm_source=opensearch"}
     :google-define {:alias "gd" :url "http://www.google.com/search?q=define:%s"}
     :wikipedia {:alias "w" :url "http://en.wikipedia.org/wiki/Special:Search?search=%s"}
+    :scholar {:alias "sc" :url "https://scholar.google.com/scholar?q=%s"}
     ; url doesnt work on phone
     :gmail {:alias "gmas" :url "https://mail.google.com/mail/u/0/?shva=1#search/%s"}
     :wolfram {:alias "wolf" :url "http://www.wolframalpha.com/input/?i=%s"}

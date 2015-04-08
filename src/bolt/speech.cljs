@@ -3,50 +3,53 @@
   (:require [cljs.core.async :refer [put! <! >! chan timeout]]
             [clojure.string :as string]))
 
-(declare recognizing recognition img-elem input-elem button-elem)
+(declare recognizing recognition img-elem)
 
-(defn set-image [path]
-  (-> img-elem .-src (set! path)))
+(defn set-image [path app]
+  (-> @app :img-elem .-src (set! path)))
 
-(defn start [e]
+(defn start [_ app]
   (.log js/console "Started speech capture.")
-  (def recognizing true)
-  (set-image "img/mic-animate.gif"))
+  (swap! app assoc :recognizing true)
+  (set-image "img/mic-animate.gif" app))
 
-(defn error [err]
+(defn error [err app]
   (.log js/console "Error while capturing speech!" err)
-  (def recognizing false)
-  (set-image "img/mic-slash.gif"))
+  (swap! app assoc :recognizing false)
+  (set-image "img/mic-slash.gif" app))
 
-(defn end [e]
+(defn end [_ app]
   (.log js/console "Finished speech capture.")
-  (def recognizing false)
-  (set-image "img/mic.gif"))
+  (swap! app assoc :recognizing false)
+  (set-image "img/mic.gif" app))
 
-(defn result [event]
-  (let [result-indices (range (.-resultIndex event) (.. event -results -length))
+(defn result [event-data app]
+  (let [result-indices (range (.-resultIndex event-data) (.. event-data -results -length))
         result (reduce (fn [accum idx]
-                         (str accum (-> event .-results (aget idx) (aget 0) .-transcript)))
+                         #_(.debug js/console "STEP" idx (-> event-data .-results))
+                         (str accum (-> event-data .-results (aget idx) (aget 0) .-transcript)))
                        "" result-indices)]
-    (.log js/console "Possible speech result:" result)
-    (when (some #(-> event .-results (aget %) .-isFinal) result-indices)
-      (.log js/console "Final speech result:" result)
-      (-> input-elem .-value (set! (string/lower-case result)))
-      (.click button-elem))))
+    (.debug js/console "Interim result" result)
+    (when-let [final-result (some #(when (-> event-data .-results (aget %) .-isFinal)
+                                     (-> event-data .-results (aget %) (aget 0) .-transcript))
+                                  result-indices)]
+      (.log js/console "Final result" final-result)
+      (swap! app assoc :user-input (string/lower-case final-result))
+      (put! (:event-ch @app) [:service.search (string/lower-case final-result)]))))
 
-(defn event-loop [ch]
+(defn event-loop [ch app]
   (go (while true
         (let [[event event-data] (<! ch)]
           #_(.log js/console (pr-str event event-data))
           (case event
-            :start (start event-data)
-            :error (error event-data)
-            :result (result event-data)
-            :end (end event-data)
+            :start (start event-data app)
+            :error (error event-data app)
+            :result (result event-data app)
+            :end (end event-data app)
             (println "Unknown event" event))))))
 
 (defn ->recognition
-  []
+  [app]
   (let [recognition (js/webkitSpeechRecognition.)
         ch (chan)]
     (doto recognition
@@ -55,19 +58,16 @@
       (-> .-onerror (set! #(put! ch [:error %])))
       (-> .-onresult (set! #(put! ch [:result %])))
       (-> .-onend (set! #(put! ch [:end %]))))
-    (event-loop ch)
+    (event-loop ch app)
     recognition))
 
-(defn toggle-speech [input-id button-id event]
+(defn toggle-speech [app event]
+  (.preventDefault event)
   (if (.-webkitSpeechRecognition js/window)
-    (do
-      (when-not recognition
-        (def input-elem (.querySelector js/document input-id))
-        (def button-elem (.querySelector js/document button-id))
-        (def img-elem (.-target event))
-        (def recognition (->recognition)))
-
-      (if recognizing (.stop recognition) (.start recognition)))
-  (js/alert "Web Speech API is not supported by this browser. Use Chrome version 25 or later.")))
-
-
+    (let [recognition (or (:recognition @app) (->recognition app))]
+      (when (not= recognition (:recognition @app))
+        (swap! app assoc
+               :img-elem (.-target event)
+               :recognition recognition))
+      (if (:recognizing @app) (.stop recognition) (.start recognition)))
+    (js/alert "Web Speech API is not supported by this browser. Use Chrome version 25 or later.")))

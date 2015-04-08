@@ -1,5 +1,7 @@
 resources/public/js/out
+resources/public/js/prod-out
 resources/public/js/*.js
+resources/public/js/*.js.map
 .lein-repl-history
 target
 out

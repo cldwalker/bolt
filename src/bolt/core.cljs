@@ -1,29 +1,18 @@
 (ns bolt.core
-  (:require-macros [cljs.core.async.macros :refer [go alt!]]
-                   [secretary.macros :refer [defroute]])
-  (:require [goog.events :as events]
-            [cljs.core.async :refer [put! <! >! chan timeout]]
-            [om.core :as om :include-macros true]
-            [om.dom :as dom :include-macros true]
-            [secretary.core :as secretary]
-            [clojure.string :as string]
+  (:require [cljs.core.async :refer [put! <! >! chan timeout]]
+            [bolt.config :as config]
             [bolt.speech :as speech]
-            [bolt.config :as config])
-  (:import [goog History]
-           [goog.history EventType]))
+            [clojure.string :as string]
+            [secretary.core :as secretary]
+            [goog.events :as events]
+            [goog.history.EventType :as EventType]
+            [rum])
+  (:require-macros [cljs.core.async.macros :refer [go]]
+                   [secretary.macros :refer [defroute]])
+  (:import [goog History]))
 
-;; Lets you do (prn "stuff") to the console
-(enable-console-print!)
-
-(def app-state
-  (atom {}))
-
-(defn submit-search [chan e]
-  (put! chan [:service.search
-              (-> (.querySelector js/document "#search_term")
-                  .-value)])
-  false)
-
+(def app-state (atom {:user-input ""
+                      :event-ch (chan 10)}))
 (def commands-index
   (memoize (fn []
              (merge
@@ -36,21 +25,7 @@
                     (map (fn [cmd] [(keyword (:alias cmd)) (:url cmd)]))
                     (into {}))))))
 
-(def toggle-speech (partial speech/toggle-speech "#search_term" "#search_submit"))
-
-(defn search-form [app owner {:keys [chan]}]
-  (om/component
-   (dom/form #js {:onSubmit #(submit-search chan %)
-                  :className "jumbotron"}
-             (apply dom/datalist #js {:id "commands"}
-                    (map #(dom/option #js {:value (name %)})
-                         (sort (keys (commands-index)))))
-             (dom/input #js {:id "search_term" :type "text" :autoFocus "autofocus" :list "commands"})
-             (dom/a #js {:className "btn btn-default mic" :href "#" :onClick toggle-speech}
-                         (dom/img #js {:id "mic" :src "img/mic.gif"}))
-             (dom/input #js {:id "search_submit" :type "submit" :value "Search" :className "btn btn-default btn-lg"}))))
-
-
+;; Event handling
 
 (defn process-search*
   "For now this is just a local config lookup but this could interact
@@ -67,15 +42,8 @@
     {:name cmd :url url :args args}))
 
 (defn process-search
-  [event-data chan]
-  (put! chan [:ui.search (process-search* event-data)]))
-
-(defn handle-event [app event event-data {:keys [chan]}]
-  (.log js/console "Event: " (pr-str event event-data))
-  (case event
-    :service.search (process-search event-data chan)
-    :ui.search  (om/update! app assoc :search-result event-data)
-    (.log js/console "No event found for" event event-data)))
+  [event-data ch]
+  (put! ch [:ui.search (process-search* event-data)]))
 
 (defn build-url [url args]
   (let [expected-args (count (re-seq #"%s" url))]
@@ -84,58 +52,96 @@
       ;; TODO: error for non-matching args
       :else (apply string/replace url "%s" args))))
 
-(defn handle-search-result [app]
-  (let [{:keys [url] :as cmd} (:search-result app)]
-    (if url
-      ;; TODO: url encode args
-      (let [redirect-url (build-url url (:args cmd))]
-        (om/update! app assoc :message
-                    (string/replace-first "Redirecting with %s ..." "%s" (name (:name cmd))))
-        (set! (.-location js/window) redirect-url))
-      (om/update! app assoc :error (str "No command found for " (:name cmd))))
-    nil))
+(defn handle-search-result [app {:keys [url] :as cmd}]
+  (cond
+   (re-find #"nosubmit" js/window.location.search)
+   (js/alert (str "Would submit: " cmd))
 
-(defn bolt-app [app owner]
-  (reify
-    om/IWillMount
-    (will-mount [_]
-      (def cursor app) ;; need global access to this for other routes
-      (let [main-chan (chan 10)]
-        (om/set-state! owner :chan main-chan)
-        (go (while true
-              (let [[event event-data](<! main-chan)]
-                (handle-event
-                  app
-                  event
-                  event-data
-                  {:chan main-chan}))))))
-    om/IRender
-    (render [_]
-      (dom/div nil
-               (dom/h1 nil "Welcome to Bolt!")
-               (when (:error app)
-                 (dom/div
-                   #js {:className "alert alert-danger"}
-                   (:error app)))
-               (when (:message app)
-                 (dom/div
-                   #js {:className "alert alert-success"}
-                   (:message app)))
-               (om/build search-form app {:opts {:chan (om/get-state owner :chan)}})
-               (when (:search-result app)
-                 (handle-search-result app))))))
+   (seq url)
+   ;; TODO: url encode args
+   (let [redirect-url (build-url url (:args cmd))]
+     (swap! app assoc :message
+            (string/replace-first "Redirecting with %s ..." "%s" (name (:name cmd))))
+     (set! (.-location js/window) redirect-url))
+
+   :else
+   (swap! app assoc :error (str "No command found for " (:name cmd)))))
+
+(defn handle-event [app event event-data]
+  (.log js/console "Event: " (pr-str event event-data))
+  (case event
+    :service.search (process-search event-data (:event-ch @app))
+    :ui.search      (handle-search-result app event-data)
+    (.log js/console "No event found for" event event-data)))
+
+;; UI debugging
+(def dom->component (atom {}))
+
+;; Mixin to debug state for component by selector
+;; Just drop it on any defc e.g. < debuggable
+(def debuggable
+  {:did-mount (fn [state]
+                ;; Save component since another mixin may change state later
+                (when-let [dom (.getDOMNode (:rum/react-component state))]
+                  (swap! dom->component assoc dom (:rum/react-component state)))
+                state)})
+
+(defn selector->state [selector]
+  (if-let [component (cljs.core/get @dom->component (js/document.querySelector selector))]
+    @(aget (.-props component) ":rum/state")
+    (cljs.core/println "No component found")))
+
+#_(selector->state "#app div")
+#_(selector->state "input")
+
+;; UI
+
+(defn submit-search [e ch user-input]
+  (put! ch [:service.search user-input])
+  false)
+
+(rum/defc input < rum/cursored rum/cursored-watch [ref attributes]
+  [:input (merge attributes {:type "text"
+                             :value @ref
+                             :on-change #(reset! ref (.. % -target -value))})])
+(rum/defc search-form [app]
+ [:form {:onSubmit #(submit-search % (:event-ch @app) (:user-input @app))
+         :className "jumbotron"}
+  [:datalist#commands (map #(vector :option {:value (name %)
+                                             :key (str "command-" (name %))})
+                           (sort (keys (commands-index))))]
+  (input (rum/cursor app [:user-input]) {:autoFocus "autofocus" :list "commands" :id "search_term"})
+  [:a {:className "btn btn-default mic" :href "#" :onClick (partial speech/toggle-speech app)}
+   [:img#mic {:src "img/mic.gif"}]]
+  [:input {:type "submit" :value "Search" :className "btn btn-default btn-lg"}]])
+
+(def event-loop
+  {:will-mount (fn [state]
+                 (go (while true
+                         (let [[event event-data](<! (:event-ch @app-state))]
+                           (handle-event app-state event event-data))))
+                 state)})
+
+(rum/defc bolt-app < event-loop rum/reactive []
+  (let [{:keys [message error]} (rum/react app-state)]
+    [:div
+     [:h1 "Welcome to Bolt!"]
+     (when error
+       [:div {:className "alert alert-danger"} error])
+     (search-form app-state)
+     (when message
+       [:div {:className "alert alert-success"} message])]))
 
 ;; Routing
 
 (defroute "/" []
-  (om/root app-state bolt-app (.getElementById js/document "app"))
-  (when (-> window.location.search (.indexOf "start=") (> -1))
-    (toggle-speech #js {:target (.querySelector js/document "#mic")})))
+  (rum/mount (bolt-app) (.getElementById js/document "app")))
 
+;; For browser commands
 (defroute "/to/:command" [command]
-  (om/root app-state bolt-app (.getElementById js/document "app"))
-  ;; need cursor for error handling
-  (om/update! cursor assoc :search-result (process-search* command)))
+  ;; Faster commands (no react components) in exchange for no alerts
+  ((:will-mount event-loop) {})
+  (put! (:event-ch @app-state) [:service.search command]))
 
 (def history (History.))
 
