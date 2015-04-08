@@ -3,7 +3,7 @@
   :url "http://example.com/FIXME"
 
   :dependencies [[org.clojure/clojure "1.6.0" :scope "provided"]
-                 [org.clojure/clojurescript "0.0-3117" :scope "provided"]
+                 [org.clojure/clojurescript "0.0-3149" :scope "provided"]
                  [rum "0.2.6"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [secretary "0.4.0"]]
@@ -18,16 +18,15 @@
                                    :output-dir "resources/public/js/out"
                                    :optimizations :none
                                    :source-map true
+                                   :warnings {:single-segment-namespace false}
                                    :asset-path "js/out"}}
-                       {:id "release"
+                       {:id "prod"
                         :source-paths ["src"]
-                        :compiler {
-                                   :output-to "resources/public/js/bolt.js"
-                                   :source-map "resources/public/js/bolt.js.map"
+                        :compiler {:output-to "resources/public/js/bolt.js"
+                                   :output-dir "resources/public/js/prod-out"
                                    :optimizations :advanced
+                                   :source-map "resources/public/js/bolt.js.map"
                                    :pretty-print false
-                                   :output-wrapper false
-                                   :preamble ["om/react.min.js"]
-                                   :externs ["om/externs/react.js"]
-                                   :closure-warnings
-                                   {:non-standard-jsdoc :off}}}]})
+                                   :asset-path "js/prod-out"
+                                   :warnings {:single-segment-namespace false}
+                                   :externs ["resources/externs/w3c_speech.js"]}}]})
