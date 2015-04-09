@@ -135,7 +135,11 @@
 ;; Routing
 
 (defroute "/" []
-  (rum/mount (bolt-app) (.getElementById js/document "app")))
+  (rum/mount (bolt-app) (.getElementById js/document "app"))
+  (when (re-find #"start" js/window.location.search)
+    (speech/toggle-speech app-state
+                          #js {:target (.querySelector js/document "#mic")
+                               :preventDefault (fn [])})))
 
 ;; For browser commands
 (defroute "/to/:command" [command]
