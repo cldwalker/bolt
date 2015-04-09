@@ -3,25 +3,17 @@
   (:require [cljs.core.async :refer [put! <! >! chan timeout]]
             [clojure.string :as string]))
 
-(declare recognizing recognition img-elem)
-
-(defn set-image [path app]
-  (-> @app :img-elem .-src (set! path)))
-
 (defn start [_ app]
   (.log js/console "Started speech capture.")
-  (swap! app assoc :recognizing true)
-  (set-image "img/mic-animate.gif" app))
+  (swap! app assoc :recognizing true :mic-path "img/mic-animate.gif"))
 
 (defn error [err app]
   (.log js/console "Error while capturing speech!" err)
-  (swap! app assoc :recognizing false)
-  (set-image "img/mic-slash.gif" app))
+  (swap! app assoc :recognizing false :mic-path "img/mic-slash.gif"))
 
 (defn end [_ app]
   (.log js/console "Finished speech capture.")
-  (swap! app assoc :recognizing false)
-  (set-image "img/mic.gif" app))
+  (swap! app assoc :recognizing false :mic-path "img/mic.gif"))
 
 (defn result [event-data app]
   (let [result-indices (range (.-resultIndex event-data) (.. event-data -results -length))
@@ -66,8 +58,6 @@
   (if (.-webkitSpeechRecognition js/window)
     (let [recognition (or (:recognition @app) (->recognition app))]
       (when (not= recognition (:recognition @app))
-        (swap! app assoc
-               :img-elem (.-target event)
-               :recognition recognition))
+        (swap! app assoc :recognition recognition))
       (if (:recognizing @app) (.stop recognition) (.start recognition)))
     (js/alert "Web Speech API is not supported by this browser. Use Chrome version 25 or later.")))

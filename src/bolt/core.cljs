@@ -12,7 +12,8 @@
   (:import [goog History]))
 
 (def app-state (atom {:user-input ""
-                      :event-ch (chan 10)}))
+                      :event-ch (chan 10)
+                      :mic-path "img/mic.gif"}))
 (def commands-index
   (memoize (fn []
              (merge
@@ -112,7 +113,7 @@
                            (sort (keys (commands-index))))]
   (input (rum/cursor app [:user-input]) {:autoFocus "autofocus" :list "commands" :id "search_term"})
   [:a {:className "btn btn-default mic" :href "#" :onClick (partial speech/toggle-speech app)}
-   [:img#mic {:src "img/mic.gif"}]]
+   [:img#mic {:src (:mic-path @app)}]]
   [:input {:type "submit" :value "Search" :className "btn btn-default btn-lg"}]])
 
 (def event-loop
@@ -137,9 +138,7 @@
 (defroute "/" []
   (rum/mount (bolt-app) (.getElementById js/document "app"))
   (when (re-find #"start" js/window.location.search)
-    (speech/toggle-speech app-state
-                          #js {:target (.querySelector js/document "#mic")
-                               :preventDefault (fn [])})))
+    (speech/toggle-speech app-state #js {:preventDefault (fn [])})))
 
 ;; For browser commands
 (defroute "/to/:command" [command]
