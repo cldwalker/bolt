@@ -1,5 +1,6 @@
 (ns scratch)
 
+(comment
 (def cmds
   (->> (slurp "resources/queriac-cmds.txt")
        (clojure.string/split-lines)
@@ -9,7 +10,7 @@
 (->> cmds
      (filter #(.contains (second %) "(q)"))
      (remove #(.contains (second %) "javascript:"))
-     (map #(zipmap [:name :url :alias] %)) 
+     (map #(zipmap [:name :url :alias] %))
      (map #(update-in % [:url]
                       (fn [x]
                         (clojure.string/replace-first x "(q)" "%s"))))
@@ -24,3 +25,4 @@
 ;; | incorrectly parsed
 (->> cmds
      (filter #(> (count %) 3)))
+ )
