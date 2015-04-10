@@ -133,10 +133,12 @@
                   [:a {:href (:url %)} (:url %)])
          (sort-by :name
                   (filter
-                   #(or
-                     (> (.indexOf (:url %) (:user-input @app)) -1)
-                     (> (.indexOf (str (:alias %)) (:user-input @app)) -1)
-                     (> (.indexOf (:name %) (:user-input @app)) -1))
+                   #(let [first-word (or (re-find #"\S+" (:user-input @app))
+                                         (:user-input @app))]
+                      (or
+                       (> (.indexOf (:url %) first-word) -1)
+                       (> (.indexOf (str (:alias %)) first-word) -1)
+                       (> (.indexOf (:name %) first-word) -1)))
                    (:all-commands @app))))]])
 
 (rum/defc bolt-app < event-loop rum/reactive [app]
