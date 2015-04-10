@@ -12,6 +12,8 @@
 
 (def app-state (atom {:user-input ""
                       :event-ch (chan 10)
+                      :all-commands (map (fn [[k v]] (assoc v :name (name k)))
+                                         (:commands config/config))
                       :mic-path "img/mic.gif"}))
 (def commands-index
   (memoize (fn []
@@ -121,20 +123,37 @@
                            (handle-event app-state event event-data))))
                  state)})
 
-(rum/defc bolt-app < event-loop rum/reactive []
-  (let [{:keys [message error]} (rum/react app-state)]
+(rum/defc commands-list [app]
+  [:.jumbotron
+   [:h2 (if (seq (:user-input @app)) "Matching Commands" "All Commands")]
+   [:ul
+    (map #(vector :li (str (:name %)
+                           (when (:alias %) (str " (" (:alias %) ")"))
+                           ": ")
+                  [:a {:href (:url %)} (:url %)])
+         (sort-by :name
+                  (filter
+                   #(or
+                     (> (.indexOf (:url %) (:user-input @app)) -1)
+                     (> (.indexOf (str (:alias %)) (:user-input @app)) -1)
+                     (> (.indexOf (:name %) (:user-input @app)) -1))
+                   (:all-commands @app))))]])
+
+(rum/defc bolt-app < event-loop rum/reactive [app]
+  (let [{:keys [message error]} (rum/react app)]
     [:div
      [:h1 "Welcome to Bolt!"]
      (when error
        [:div {:className "alert alert-danger"} error])
-     (search-form app-state)
+     (search-form app)
      (when message
-       [:div {:className "alert alert-success"} message])]))
+       [:div {:className "alert alert-success"} message])
+     (commands-list app)]))
 
 ;; Routing
 
 (defroute "/" []
-  (rum/mount (bolt-app) (.getElementById js/document "app"))
+  (rum/mount (bolt-app app-state) (.getElementById js/document "app"))
   (when (re-find #"start" js/window.location.search)
     (speech/toggle-speech app-state #js {:preventDefault (fn [])})))
 
