@@ -27,6 +27,7 @@
     :github-lucky {:alias "ghl" :url "http://tagaholic.me/github-lucky/?query=%s"}
     :crossclj {:alias "cclj" :url "http://crossclj.info/search?q=%s"}
     :drive {:alias "dr" :url "https://drive.google.com/drive/search?q=%s"}
+    :bus {:url "http://openmbta.org/routes/Bus#%s"}
 
     ;; not used on phone
     :google-group {:alias "ggs" :url "http://groups.google.com/groups/dir?q=%s"}
