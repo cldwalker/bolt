@@ -19,12 +19,14 @@
     :clojuredocs {:alias "cd" :url "http://clojuredocs.org/search?q=%s"}
     :flickr {:alias "fl" :url "http://www.flickr.com/search/?q=%s"}
     :imdb {:url "http://www.imdb.com/find?q=%s&s=all"}
+    :rotten {:url "http://www.rottentomatoes.com/search/?search=%s"}
     :domain {:url "https://domai.nr/?q=%s"}
     :freebase {:alias "fb" :url "http://www.freebase.com/search?query=%s"}
     :twitter {:url "https://twitter.com/search?q=%s"}
     :urbandictionary {:alias "urban" :url "http://www.urbandictionary.com/define.php?term=%s"}
     :github-lucky {:alias "ghl" :url "http://tagaholic.me/github-lucky/?query=%s"}
     :crossclj {:alias "cclj" :url "http://crossclj.info/search?q=%s"}
+    :drive {:alias "dr" :url "https://drive.google.com/drive/search?q=%s"}
 
     ;; not used on phone
     :google-group {:alias "ggs" :url "http://groups.google.com/groups/dir?q=%s"}
