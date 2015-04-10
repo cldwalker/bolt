@@ -3,12 +3,11 @@
             [bolt.config :as config]
             [bolt.speech :as speech]
             [clojure.string :as string]
-            [secretary.core :as secretary]
             [goog.events :as events]
             [goog.history.EventType :as EventType]
+            [secretary.core :as secretary :refer-macros [defroute]]
             [rum])
-  (:require-macros [cljs.core.async.macros :refer [go]]
-                   [secretary.macros :refer [defroute]])
+  (:require-macros [cljs.core.async.macros :refer [go]])
   (:import [goog History]))
 
 (def app-state (atom {:user-input ""
@@ -59,8 +58,7 @@
    (js/alert (str "Would submit: " cmd))
 
    (seq url)
-   ;; TODO: url encode args
-   (let [redirect-url (build-url url (:args cmd))]
+   (let [redirect-url (build-url url (map js/encodeURIComponent (:args cmd)))]
      (swap! app assoc :message
             (string/replace-first "Redirecting with %s ..." "%s" (name (:name cmd))))
      (set! (.-location js/window) redirect-url))
@@ -141,7 +139,7 @@
     (speech/toggle-speech app-state #js {:preventDefault (fn [])})))
 
 ;; For browser commands
-(defroute "/to/:command" [command]
+(defroute "/to/*command" {command :command}
   ;; Faster commands (no react components) in exchange for no alerts
   ((:will-mount event-loop) {})
   (put! (:event-ch @app-state) [:service.search command]))

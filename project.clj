@@ -6,7 +6,7 @@
                  [org.clojure/clojurescript "0.0-3149" :scope "provided"]
                  [rum "0.2.6"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [secretary "0.4.0"]]
+                 [secretary "1.2.2"]]
 
   :plugins [[lein-cljsbuild "1.0.5"]]
 
@@ -22,6 +22,7 @@
                                    :asset-path "js/out"}}
                        {:id "prod"
                         :source-paths ["src"]
+                        :notify-command ["say"]
                         :compiler {:output-to "resources/public/js/bolt.js"
                                    :output-dir "resources/public/js/prod-out"
                                    :optimizations :advanced
