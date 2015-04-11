@@ -22,7 +22,8 @@
     :flickr {:alias "fl" :url "http://www.flickr.com/search/?q=%s"}
     :imdb {:url "http://www.imdb.com/find?q=%s&s=all"}
     :rotten {:url "http://www.rottentomatoes.com/search/?search=%s"}
-    :domain {:url "https://domai.nr/?q=%s"}
+    :domainr {:url "https://domai.nr/?q=%s"}
+    :google-domain {:url "https://domains.google.com/registrar?s=%s"}
     :freebase {:alias "fb" :url "http://www.freebase.com/search?query=%s"}
     :twitter {:url "https://twitter.com/search?q=%s"}
     :urbandictionary {:alias "urban" :url "http://www.urbandictionary.com/define.php?term=%s"}
@@ -36,6 +37,7 @@
     :film {:names ["fandango" "imdb" "rotten"]}
     :find {:names ["google" "wikipedia" "wikidata" "freebase"]}
     :buy {:names ["amazon" "google-shopping"]}
+    :domain {:names ["domainr" "google-domain"]}
 
     ;; not used on phone
     :google-group {:alias "ggs" :url "http://groups.google.com/groups/dir?q=%s"}
