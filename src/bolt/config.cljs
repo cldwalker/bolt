@@ -11,6 +11,7 @@
     :youtube {:alias "v" :url "https://www.youtube.com/results?search_query=%s&utm_source=opensearch"}
     :google-define {:alias "gd" :url "http://www.google.com/search?q=define:%s"}
     :wikipedia {:alias "w" :url "http://en.wikipedia.org/wiki/Special:Search?search=%s"}
+    :wikidata {:alias "wd" :url "http://www.wikidata.org/wiki/Special:Search?search=%s"}
     :scholar {:alias "sc" :url "https://scholar.google.com/scholar?q=%s"}
     ; url doesnt work on phone
     :gmail {:alias "gmas" :url "https://mail.google.com/mail/u/0/?shva=1#search/%s"}
@@ -28,6 +29,11 @@
     :crossclj {:alias "cclj" :url "http://crossclj.info/search?q=%s"}
     :drive {:alias "dr" :url "https://drive.google.com/drive/search?q=%s"}
     :bus {:url "http://openmbta.org/routes/Bus#%s"}
+    :fandango {:alias "fan" :url "http://www.fandango.com/search/?q=%s"}
+
+    ;; groups
+    :film {:names ["fandango" "imdb" "rotten"]}
+    :find {:names ["google" "wikipedia" "wikidata" "freebase"]}
 
     ;; not used on phone
     :google-group {:alias "ggs" :url "http://groups.google.com/groups/dir?q=%s"}

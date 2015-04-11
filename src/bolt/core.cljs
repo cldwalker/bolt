@@ -15,37 +15,39 @@
                       :all-commands (map (fn [[k v]] (assoc v :name (name k)))
                                          (:commands config/config))
                       :mic-path "img/mic.gif"}))
+
+;; Map lookup of commands by name or alias
 (def commands-index
   (memoize (fn []
              (merge
                (->> (:commands config/config)
-                    (map (fn [[k v]] [k (:url v)]))
+                    (map (fn [[k v]] [k v]))
                     (into {}))
                (->> (:commands config/config)
                     vals
                     (filter :alias)
-                    (map (fn [cmd] [(keyword (:alias cmd)) (:url cmd)]))
+                    (map (fn [cmd] [(keyword (:alias cmd)) cmd]))
                     (into {}))))))
 
 ;; Event handling
 
-(defn process-search*
+(defn input->cmd
   "For now this is just a local config lookup but this could interact
   with another service."
   [input]
   ;; decode to use as a default search engine
   (let [[cmd & args] (-> input js/decodeURIComponent (string/split #"\s+"))
-        url (get (commands-index) (keyword cmd))
-        [cmd url args] (if (and (nil? url) (:default config/config))
-                         [(:default config/config)
-                          (get (commands-index) (:default config/config))
-                          (into [cmd] args)]
-                         [cmd url args])]
-    {:name cmd :url url :args args}))
+        cmd-map (get (commands-index) (keyword cmd))
+        [cmd cmd-map args] (if (and (nil? cmd-map) (:default config/config))
+                             [(:default config/config)
+                              (get (commands-index) (:default config/config))
+                              (into [cmd] args)]
+                             [cmd cmd-map args])]
+    (merge cmd-map {:name cmd :args args})))
 
 (defn process-search
   [event-data ch]
-  (put! ch [:ui.search (process-search* event-data)]))
+  (put! ch [:ui.search (input->cmd event-data)]))
 
 (defn build-url [url args]
   (let [expected-args (count (re-seq #"%s" url))]
@@ -54,13 +56,20 @@
       ;; TODO: error for non-matching args
       :else (apply string/replace url "%s" args))))
 
-(defn handle-search-result [app {:keys [url] :as cmd}]
+(defn handle-search-result [app {:keys [names args url] :as cmd}]
   (cond
    (re-find #"nosubmit" js/window.location.search)
    (js/alert (str "Would submit: " cmd))
 
+   (seq names)
+   (doseq [group-cmd (map #(input->cmd (string/join " " (into [%] args)))
+                          names)]
+     ;; Requires popup permissions per browser
+     (js/window.open (build-url (:url group-cmd)
+                                (map js/encodeURIComponent args))))
+
    (seq url)
-   (let [redirect-url (build-url url (map js/encodeURIComponent (:args cmd)))]
+   (let [redirect-url (build-url url (map js/encodeURIComponent args))]
      (swap! app assoc :message
             (string/replace-first "Redirecting with %s ..." "%s" (name (:name cmd))))
      (set! (.-location js/window) redirect-url))
@@ -130,15 +139,17 @@
     (map #(vector :li (str (:name %)
                            (when (:alias %) (str " (" (:alias %) ")"))
                            ": ")
-                  [:a {:href (:url %)} (:url %)])
+                  (if (:names %)
+                    (string/join ", " (:names %))
+                    [:a {:href (:url %)} (:url %)]))
          (sort-by :name
                   (filter
                    #(let [first-word (or (re-find #"\S+" (:user-input @app))
                                          (:user-input @app))]
                       (or
-                       (> (.indexOf (:url %) first-word) -1)
+                       (> (.indexOf (str (:url %)) first-word) -1)
                        (> (.indexOf (str (:alias %)) first-word) -1)
-                       (> (.indexOf (:name %) first-word) -1)))
+                       (> (.indexOf (str (:name %)) first-word) -1)))
                    (:all-commands @app))))]])
 
 (rum/defc bolt-app < event-loop rum/reactive [app]
