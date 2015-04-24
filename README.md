@@ -1,6 +1,6 @@
 ## Description
 This project commands the web with our own words, not Google's, Siri or any other generic interface.
-Bolt can be used as your browser's default search engine and as a customizable voice assitant on
+Bolt can be used as your browser's default search engine and as a customizable voice assistant on
 your phone. This is an experimental successor to [queriac](https://github.com/cldwalker/queriac),
 [yubnub](http://yubnub.org/), etc.
 
@@ -12,18 +12,24 @@ Bolt works by translating our words (commands) to urls. For example, the devdocs
 
 ## Use it
 
-Try the [demo](https://googledrive.com/host/0B66TjgTudHqHbHlQUnpGaVdHS28/index.html).
+Try the [demo](https://tagaholic.me/bolt/).
 
 To use the demo as I use it:
 
 * As my default search engine.
   * In Mac Chrome, you'll find this in settings under "Manage search engines...". Add an
-  entry for `https://googledrive.com/host/0B66TjgTudHqHbHlQUnpGaVdHS28/index.html#/to/%s` and click
+  entry for `https://tagaholic.me/bolt/#/to/%s` and click
   "Make default".
   * Any commands I type into the address bar are translated by bolt.
 * As a one-click voice assistant.
-  * In Android Chrome, I navigate to `https://googledrive.com/host/0B66TjgTudHqHbHlQUnpGaVdHS28/index.html?start=1`. In the upper-right menu, I select "Add to homescreen".
+  * In Android Chrome, I navigate to `https://tagaholic.me/bolt/?start=1`. In the upper-right menu, I select "Add to homescreen".
   * To voice command anything, I click on the url icon and speak.
+
+## Experimental features
+
+A group command allows you to kick off multiple commands with the same argument. For example, if you
+type `buy shake`, this will query amazon and google shopping for `shake`. Note: This works with
+popups for now so you will need to give the domain permission the first time.
 
 ## Dev it
 
@@ -57,7 +63,6 @@ See LICENSE.TXT
 Images were taken from [this sample project](https://github.com/GoogleChrome/webplatform-samples)
 
 ## TODO
-* advanced compilation
 * non-shitty UI
 * custom https domain
 * consider bookmarklet support
