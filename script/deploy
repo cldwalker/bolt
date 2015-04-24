@@ -2,8 +2,14 @@
 set -e
 
 rm -rf out
-lein cljsbuild once dev
+lein cljsbuild once prod
 cp -R resources/public out
 
+git checkout gh-pages
 # deploy to google drive since gh-pages doesn't do https :(
-cp -Rf out/ ~/Google\ Drive/bolt
+cp -Rf out/* .
+git add index.html js css img
+diff_status=$(git diff --cached)
+if [ "$diff_status" != "" ]; then
+  git commit -m "Update app from script/deploy"
+fi;
