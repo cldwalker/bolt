@@ -12,6 +12,7 @@ cljs.core.constant$keyword$_STAR_ = new cljs.core.Keyword(null,"*","*",-12947323
 cljs.core.constant$keyword$get = new cljs.core.Keyword(null,"get","get",1683182755);
 cljs.core.constant$keyword$youtube = new cljs.core.Keyword(null,"youtube","youtube",-1932361085);
 cljs.core.constant$keyword$google_DASH_lucky = new cljs.core.Keyword(null,"google-lucky","google-lucky",-1250861245);
+cljs.core.constant$keyword$javadoc = new cljs.core.Keyword(null,"javadoc","javadoc",117493252);
 cljs.core.constant$keyword$meta = new cljs.core.Keyword(null,"meta","meta",1499536964);
 cljs.core.constant$keyword$selected = new cljs.core.Keyword(null,"selected","selected",574897764);
 cljs.core.constant$keyword$google_DASH_domain = new cljs.core.Keyword(null,"google-domain","google-domain",66116388);

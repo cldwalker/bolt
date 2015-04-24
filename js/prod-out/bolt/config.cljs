@@ -33,6 +33,7 @@
     :bus {:url "http://openmbta.org/routes/Bus#%s"}
     :fandango {:alias "fan" :url "http://www.fandango.com/search/?q=%s"}
     :history {:url "https://history.google.com/history/find?q=%s"}
+    :javadoc {:url "https://search.oracle.com/search/search?q=%s"}
 
     ;; groups
     :film {:names ["fandango" "imdb" "rotten"]}
