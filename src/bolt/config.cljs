@@ -20,6 +20,7 @@
     :lastfm {:alias "lfm" :url "http://www.last.fm/search?q=%s"}
     :clojuredocs {:alias "cd" :url "http://clojuredocs.org/search?q=%s"}
     :flickr {:alias "fl" :url "http://www.flickr.com/search/?q=%s"}
+    :google-image {:url "https://www.google.com/search?site=imghp&tbm=isch&q=%s"}
     :imdb {:url "http://www.imdb.com/find?q=%s&s=all"}
     :rotten {:url "http://www.rottentomatoes.com/search/?search=%s"}
     :domainr {:url "https://domai.nr/?q=%s"}
@@ -40,6 +41,7 @@
     :find {:names ["google" "wikipedia" "wikidata" "freebase"]}
     :buy {:names ["amazon" "google-shopping"]}
     :domain {:names ["domainr" "google-domain"]}
+    :image {:names ["flickr" "google-image"]}
 
     ;; not used on phone
     :google-group {:alias "ggs" :url "http://groups.google.com/groups/dir?q=%s"}
